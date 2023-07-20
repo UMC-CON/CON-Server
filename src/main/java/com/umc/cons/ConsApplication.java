@@ -1,13 +1,13 @@
-package com.umc.con;
+package com.umc.cons;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConApplication {
+public class ConsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConApplication.class, args);
+		SpringApplication.run(ConsApplication.class, args);
 	}
 
 }
