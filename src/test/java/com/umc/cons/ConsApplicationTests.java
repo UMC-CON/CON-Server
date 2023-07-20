@@ -1,10 +1,10 @@
-package com.umc.con;
+package com.umc.cons;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ConApplicationTests {
+class ConsApplicationTests {
 
 	@Test
 	void contextLoads() {
