@@ -1,9 +1,7 @@
-package com.umc.con.common.config;
+package com.umc.cons.common.config;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BaseResponseTest {
 

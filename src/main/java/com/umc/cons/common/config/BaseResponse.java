@@ -1,4 +1,4 @@
-package com.umc.con.common.config;
+package com.umc.cons.common.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.umc.con.common.config.BaseResponseStatus.SUCCESS;
+import static com.umc.cons.common.config.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor

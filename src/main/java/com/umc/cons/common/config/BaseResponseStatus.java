@@ -1,4 +1,4 @@
-package com.umc.con.common.config;
+package com.umc.cons.common.config;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
