@@ -1,4 +1,4 @@
-package com.umc.con.common.config;
+package com.umc.cons.common.config;
 
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
