@@ -1,6 +1,8 @@
 package com.umc.cons.member.dto;
 
 import com.umc.cons.member.domain.entity.Member;
+import com.umc.cons.member.domain.entity.Role;
+import com.umc.cons.member.domain.entity.SocialType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +38,8 @@ public class MemberDto {
                 .email(memberDto.getEmail())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .name(memberDto.getName())
+                .socialType(SocialType.OUR)
+                .role(Role.USER)
                 .build();
     }
 
