@@ -4,6 +4,7 @@ import com.umc.cons.member.domain.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -30,11 +31,11 @@ public class MemberDto {
     @NotEmpty
     private String name;
 
-    public static Member toEntity(MemberDto memberDto) {
+    public static Member toEntity(MemberDto memberDto, PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .name(memberDto.getName())
-                .password(memberDto.getPassword())
                 .email(memberDto.getEmail())
+                .password(passwordEncoder.encode(memberDto.getPassword()))
+                .name(memberDto.getName())
                 .build();
     }
 

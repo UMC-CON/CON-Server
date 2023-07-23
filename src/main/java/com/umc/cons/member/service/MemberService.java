@@ -1,6 +1,8 @@
 package com.umc.cons.member.service;
 
+import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.repository.MemberRepository;
+import com.umc.cons.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +12,22 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public boolean isEmailDuplicated(String email) {
+    public boolean isDuplicatedEmail(String email) {
         return memberRepository.existsByEmail(email);
     }
 
-    public boolean isNameDuplicated(String name) {
+    public boolean isDuplicatedName(String name) {
         return memberRepository.existsByName(name);
+    }
+
+    public boolean checkPassword(String password, String checkPassword) {
+        if (password == checkPassword) {
+            return true;
+        }
+        return false;
+    }
+
+    public void registerMember(Member member) {
+        memberRepository.save(member);
     }
 }
