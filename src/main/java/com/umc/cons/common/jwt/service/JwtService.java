@@ -2,6 +2,7 @@ package com.umc.cons.common.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.umc.cons.common.blacklist.BlackListRepository;
 import com.umc.cons.common.refreshtoken.RefreshToken;
 import com.umc.cons.common.refreshtoken.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class JwtService {
     private static final String BEARER = "Bearer ";
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final BlackListRepository blackListRepository;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
