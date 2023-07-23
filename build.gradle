@@ -27,6 +27,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // validation
 	implementation 'org.springframework.boot:spring-boot-starter-security' // security
+	implementation 'com.auth0:java-jwt:4.2.1' // jwt 관련 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE' // redis
 	compileOnly 'org.projectlombok:lombok'
 //	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
