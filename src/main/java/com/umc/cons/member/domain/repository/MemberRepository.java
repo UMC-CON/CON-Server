@@ -1,6 +1,7 @@
 package com.umc.cons.member.domain.repository;
 
 import com.umc.cons.member.domain.entity.Member;
+import com.umc.cons.member.domain.entity.SocialType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -12,4 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByName(String name);
 
     Optional<Member> findByEmail(String email);
+
+    Optional<Member> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
+
 }

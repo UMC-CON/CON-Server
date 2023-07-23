@@ -38,14 +38,19 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
+    @Column(name = "social_id")
+    private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
+
+
     @Builder
     public Member(Long id, String email, String password, String imageUrl, String name,
-     SocialType socialType, Role role ) {
+     SocialType socialType, String socialId ,Role role ) {
         this.email = email;
         this.password = password;
         this.imageUrl = imageUrl;
         this.name = name;
         this.socialType = socialType;
+        this.socialId = socialId;
         this.role = role;
     }
 }
