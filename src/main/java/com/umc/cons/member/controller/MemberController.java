@@ -26,9 +26,9 @@ public class MemberController {
         return new BaseResponse(BaseResponseStatus.SUCCESS);
     }
 
-    @GetMapping("/duplicated-nickname/{nickname}")
-    private BaseResponse<BaseResponseStatus> isDuplicatedNickname(@PathVariable String nickname) {
-        boolean isDuplicated = memberService.isNicknameDuplicated(nickname);
+    @GetMapping("/duplicated-name/{name}")
+    private BaseResponse<BaseResponseStatus> isDuplicatedNickname(@PathVariable String name) {
+        boolean isDuplicated = memberService.isNameDuplicated(name);
 
         if (isDuplicated) {
             return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);

@@ -2,6 +2,7 @@ package com.umc.cons.member.domain.entity;
 
 import com.umc.cons.common.util.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -25,9 +26,15 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "nickname")
-    private String nickname;
-
     @Column(nullable = false, name = "is_deleted")
-    private boolean isDeleted;
+    @Builder.Default
+    private boolean isDeleted = false;
+
+    @Builder
+    public Member(Long id, String email, String password, String imageUrl, String name) {
+        this.email = email;
+        this.password = password;
+        this.imageUrl = imageUrl;
+        this.name = name;
+    }
 }
