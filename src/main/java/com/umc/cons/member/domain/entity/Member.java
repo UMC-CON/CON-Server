@@ -41,6 +41,10 @@ public class Member extends BaseTimeEntity {
     @Column(name = "social_id")
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
 
+    public void registerOAuth2User(String name) {
+        this.name = name;
+        this.role = Role.USER;
+    }
 
     @Builder
     public Member(Long id, String email, String password, String imageUrl, String name,

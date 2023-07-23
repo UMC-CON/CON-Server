@@ -2,6 +2,7 @@ package com.umc.cons.member.controller;
 
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
+import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.dto.MemberDto;
 import com.umc.cons.member.service.MemberService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController("/members")
@@ -16,6 +18,7 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/duplicated-email/{email}")
@@ -54,6 +57,23 @@ public class MemberController {
 
             return new BaseResponse(BaseResponseStatus.SUCCESS);
         }
+
+        return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
+
+    }
+
+    @PostMapping("/oauth2/sign-up/{name}")
+    private BaseResponse<BaseResponseStatus> registration(@PathVariable String name, HttpServletRequest request) {
+        String accessToken = jwtService.extractAccessToken(request).orElseThrow();
+        String email = jwtService.extractEmail(accessToken).orElseThrow();
+
+        boolean isDuplicatedName = memberService.isDuplicatedName(name);
+
+        if(isDuplicatedName) {
+            return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
+        }
+
+        memberService.registerOAuth2Member(email, name);
 
         return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
 

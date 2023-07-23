@@ -30,4 +30,9 @@ public class MemberService {
     public void registerMember(Member member) {
         memberRepository.save(member);
     }
+
+    public void registerOAuth2Member(String email, String name) {
+        Member member = memberRepository.findByEmail(email).orElseThrow();
+        member.registerOAuth2User(name);
+    }
 }
