@@ -13,6 +13,7 @@ public enum BaseResponseStatus {
     //400: Request 오류, Response 오류
     REQUEST_ERROR(false, HttpStatus.BAD_REQUEST.value(), "입력값을 확인해주세요."),
     RESPONSE_ERROR(false, HttpStatus.NOT_FOUND.value(), "값을 불러오는데 실패하였습니다."),
+    RESPONSE_CONFLICT(false, HttpStatus.CONFLICT.value(), "중복되는 값이 있습니다."),
 
     EMPTY_JWT(false, HttpStatus.UNAUTHORIZED.value(), "JWT를 입력해주세요."),
     INVALID_JWT(false, HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 JWT입니다."),
