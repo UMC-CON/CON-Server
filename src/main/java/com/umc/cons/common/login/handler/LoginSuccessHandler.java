@@ -14,10 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("{jwt.refresh.expiration}")
+    @Value("${jwt.refresh.expiration}")
     private Long refreshTokenExpiration;
 
     @Override

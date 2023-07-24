@@ -93,14 +93,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private void saveAuthentication(Member member) {
         String password = member.getPassword();
-        if (password == null) { // 소셜 로그인 유저의 비밀번호를 임의로 설정하여 소셜 로그인 유저도 인증되도록 설정
+        if (password == null) {
             password = PasswordUtil.generateRandomPassword();
         }
 
         UserDetails userDetailsUser = User.builder()
                 .username(member.getEmail())
                 .password(password)
-                .roles(member.getRole().name()) // authorities에 저장
+                .roles(member.getRole().name())
                 .build();
 
 

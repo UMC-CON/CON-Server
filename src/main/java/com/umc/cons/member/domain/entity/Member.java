@@ -28,8 +28,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "is_deleted")
-    @Builder.Default
+    @Column(name = "is_deleted" ,columnDefinition = "boolean default false")
     private boolean isDeleted = false;
 
     @Enumerated(EnumType.STRING)
