@@ -1,16 +1,21 @@
 package com.umc.cons.member.service;
 
+import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.repository.MemberRepository;
 import com.umc.cons.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final HttpServletRequest request;
+    private final JwtService jwtService;
 
     public boolean isDuplicatedEmail(String email) {
         return memberRepository.existsByEmail(email);
@@ -35,4 +40,12 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email).orElseThrow();
         member.registerOAuth2User(name);
     }
+
+    public Member getLoginMember() {
+        String accessToken = jwtService.extractAccessToken(request).orElseThrow();
+        String email = jwtService.extractEmail(accessToken).orElseThrow();
+
+        return memberRepository.findByEmail(email).orElseThrow();
+    }
+
 }
