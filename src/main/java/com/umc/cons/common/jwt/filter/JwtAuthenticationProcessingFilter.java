@@ -51,8 +51,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .orElse(null);
 
         if (refreshToken != null) {
-            String email = jwtService.extractEmail(refreshToken).orElseThrow(InvalidJwtException::new);
-            checkRefreshTokenAndReIssueAccessToken(response, email);
+            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             return;
         }
 
@@ -62,23 +61,23 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     }
 
+    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
+        refreshTokenRepository.findByRefreshToken(refreshToken)
+                .ifPresentOrElse(token -> {
+                    String reIssueRefreshToken = reIssueRefreshToken(token);
+                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(token.getEmail()),
+                            reIssueRefreshToken);
+                }, () -> {
+                    throw new InvalidJwtException("Refresh token not found");
+                });
+    }
 
-    private String reIssueRefreshToken(RefreshToken refreshToken, String email) {
-        String reIssuedRefreshToken = jwtService.createRefreshToken(email);
-        refreshToken.setRefreshTokenAndTimeToLive(reIssuedRefreshToken,
-                refreshTokenExpirationPeriod/1000);
+    private String reIssueRefreshToken(RefreshToken refreshToken) {
+        String reIssuedRefreshToken = jwtService.createRefreshToken(refreshToken.getEmail());
+        refreshToken.setRefreshTokenAndTimeToLive(reIssuedRefreshToken, jwtService.getRefreshTokenExpirationPeriod());
         refreshTokenRepository.save(refreshToken);
         return reIssuedRefreshToken;
     }
-
-    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String email) {
-        RefreshToken token = refreshTokenRepository.findById(email).orElseThrow();
-        String reIssuedRefreshToken = reIssueRefreshToken(token, email);
-        jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(token.getEmail()
-        ), reIssuedRefreshToken);
-    }
-
-
 
     private void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
                                                    FilterChain filterChain) throws ServletException, IOException {

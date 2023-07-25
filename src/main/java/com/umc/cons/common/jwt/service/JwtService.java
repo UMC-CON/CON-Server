@@ -91,20 +91,6 @@ public class JwtService {
         }
     }
 
-    public Long extractSecondsExpiration(String token) {
-        try {
-            Long time = JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(token) // 유효기간이 유효하지 않으면 예외 발생
-                    .getExpiresAt()
-                    .getTime();
-            Date now = new Date();
-
-            return (time - now.getTime())/1000;
-        } catch (Exception e) {
-            return 0L;
-        }
-    }
     public void updateRefreshToken(String email, String refreshToken) {
         RefreshToken token = refreshTokenRepository.findById(email)
                 .orElse(new RefreshToken(email));
