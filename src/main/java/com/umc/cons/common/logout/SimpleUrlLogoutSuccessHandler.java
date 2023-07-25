@@ -1,8 +1,6 @@
 package com.umc.cons.common.logout;
 
 
-import com.umc.cons.common.blacklist.BlackList;
-import com.umc.cons.common.blacklist.BlackListRepository;
 import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.common.refreshtoken.RefreshToken;
 import com.umc.cons.common.refreshtoken.RefreshTokenRepository;
@@ -22,26 +20,18 @@ public class SimpleUrlLogoutSuccessHandler extends AbstractAuthenticationTargetU
 
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final BlackListRepository blackListRepository;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                                 Authentication authentication) {
         String accessToken = jwtService.extractAccessToken(request).orElseThrow();
         String email = jwtService.extractEmail(accessToken).orElseThrow();
-        Long expiration = jwtService.extractSecondsExpiration(accessToken);
 
-        logout(email, accessToken, expiration);
+        logout(email, accessToken);
     }
 
-    public void logout(String email, String accessToken, Long expiration) {
-
+    public void logout(String email, String accessToken) {
         RefreshToken refreshToken = refreshTokenRepository.findById(email).orElseThrow();
         refreshTokenRepository.delete(refreshToken);
-
-        BlackList blackList = new BlackList(accessToken);
-        blackList.setExpiration(expiration);
-
-        blackListRepository.save(blackList);
     }
 }

@@ -47,7 +47,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
 
         String refreshToken = jwtService.extractRefreshToken(request)
-                .filter(jwtService::isRefreshTokenValid)
+                .filter(jwtService::isTokenValid)
                 .orElse(null);
 
         if (refreshToken != null) {
@@ -83,7 +83,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
                                                    FilterChain filterChain) throws ServletException, IOException {
         jwtService.extractAccessToken(request)
-                .filter(jwtService::isAccessTokenValid)
+                .filter(jwtService::isTokenValid)
                 .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
                         .ifPresent(email -> memberRepository.findByEmail(email)
                                 .ifPresent(this::saveAuthentication)));
