@@ -27,5 +27,3 @@ spring:
   redis:
     host: "localhost"
     port: 6379
-    refreshToken:
-      expiration : 1209600

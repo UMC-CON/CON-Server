@@ -28,10 +28,7 @@ public class MemberService {
     }
 
     public boolean checkPassword(String password, String checkPassword) {
-        if (password == checkPassword) {
-            return true;
-        }
-        return false;
+        return password.equals(checkPassword);
     }
 
     public void registerMember(Member member) {
@@ -40,6 +37,7 @@ public class MemberService {
 
     public void registerOAuth2Member(Member member, String name) {
         member.registerOAuth2User(name);
+        memberRepository.save(member);
     }
 
     public Member getLoginMember() {

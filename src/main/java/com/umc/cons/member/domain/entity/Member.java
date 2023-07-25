@@ -25,7 +25,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(nullable = false, name = "name")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "is_deleted" ,columnDefinition = "boolean default false")

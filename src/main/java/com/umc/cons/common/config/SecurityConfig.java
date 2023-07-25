@@ -69,9 +69,9 @@ public class SecurityConfig {
 
                 // 기본페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "favicon.ioc").permitAll()
-                .antMatchers("/sign-up").permitAll() // 회원가입 접근 가능
-                .antMatchers("member/oauth2/sign-up").hasRole(Role.GUEST.toString())
-                .anyRequest().authenticated()
+                .antMatchers("/members/sign-up").permitAll() // 회원가입 접근 가능
+                .antMatchers("/members/oauth2/sign-up").hasRole(Role.GUEST.toString())
+                .anyRequest().hasRole(Role.USER.toString())
                 .and()
 
                 .logout()
