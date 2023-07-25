@@ -1,5 +1,6 @@
 package com.umc.cons.member.controller;
 
+import com.umc.cons.common.annotation.LoginMember;
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.common.jwt.service.JwtService;
@@ -21,34 +22,18 @@ public class MemberController {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/duplicated-email/{email}")
-    private BaseResponse<BaseResponseStatus> isDuplicatedEmail(@PathVariable String email) {
-        boolean isDuplicated = memberService.isDuplicatedEmail(email);
-
-        if (isDuplicated) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
-        }
-        return new BaseResponse(BaseResponseStatus.SUCCESS);
-    }
-
-    @GetMapping("/duplicated-name/{name}")
-    private BaseResponse<BaseResponseStatus> isDuplicatedName(@PathVariable String name) {
-        boolean isDuplicated = memberService.isDuplicatedName(name);
-
-        if (isDuplicated) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
-        }
-        return new BaseResponse(BaseResponseStatus.SUCCESS);
-    }
-
     @PostMapping("/sign-up")
     public BaseResponse<BaseResponseStatus> registration(@RequestBody @Valid MemberDto memberDto) {
         boolean isDuplicatedEmail = memberService.isDuplicatedEmail(memberDto.getEmail());
         boolean isDuplicatedName = memberService.isDuplicatedName(memberDto.getName());
         boolean checkPassword = memberService.checkPassword(memberDto.getPassword(), memberDto.getCheckPassword());
 
-        if (isDuplicatedEmail || isDuplicatedName) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
+        if (isDuplicatedEmail) {
+            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_EMAIL);
+        }
+
+        if (isDuplicatedName) {
+            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_NAME);
         }
 
         if (checkPassword) {
@@ -58,25 +43,21 @@ public class MemberController {
             return new BaseResponse(BaseResponseStatus.SUCCESS);
         }
 
-        return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
+        return new BaseResponse(BaseResponseStatus.RESPONSE_CHECK_PASSWORD);
 
     }
 
     @PostMapping("/oauth2/sign-up/{name}")
-    private BaseResponse<BaseResponseStatus> registration(@PathVariable String name, HttpServletRequest request) {
-        String accessToken = jwtService.extractAccessToken(request).orElseThrow();
-        String email = jwtService.extractEmail(accessToken).orElseThrow();
-
+    private BaseResponse<BaseResponseStatus> registration(@PathVariable String name, @LoginMember Member member) {
         boolean isDuplicatedName = memberService.isDuplicatedName(name);
 
         if(isDuplicatedName) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
+            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_NAME);
         }
 
-        memberService.registerOAuth2Member(email, name);
+        memberService.registerOAuth2Member(member, name);
 
-        return new BaseResponse(BaseResponseStatus.RESPONSE_CONFLICT);
-
+        return new BaseResponse(BaseResponseStatus.SUCCESS);
     }
 
 }

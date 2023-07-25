@@ -2,6 +2,7 @@ package com.umc.cons.common.login.service;
 
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.repository.MemberRepository;
+import com.umc.cons.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ public class LoginService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow();
+                .orElseThrow(MemberNotFoundException::new);
 
         return User.builder()
                 .username(member.getEmail())

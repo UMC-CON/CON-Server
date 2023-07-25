@@ -5,7 +5,7 @@ import com.umc.cons.common.oauth2.OAuthAttributes;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.entity.SocialType;
 import com.umc.cons.member.domain.repository.MemberRepository;
-import com.umc.cons.member.exception.DuplicatedMemberException;
+import com.umc.cons.member.exception.MemberDuplicatedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -65,7 +65,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         boolean emailExists = memberRepository.existsByEmail(createdMember.getEmail());
         if (emailExists) {
-            throw new DuplicatedMemberException();
+            throw new MemberDuplicatedException();
         }
 
         return memberRepository.save(createdMember);

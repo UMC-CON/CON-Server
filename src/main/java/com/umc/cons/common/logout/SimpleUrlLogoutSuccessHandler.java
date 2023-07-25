@@ -1,9 +1,11 @@
 package com.umc.cons.common.logout;
 
 
+import com.umc.cons.common.jwt.exception.InvalidJwtException;
 import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.common.refreshtoken.RefreshToken;
 import com.umc.cons.common.refreshtoken.RefreshTokenRepository;
+import com.umc.cons.common.refreshtoken.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
@@ -24,14 +26,14 @@ public class SimpleUrlLogoutSuccessHandler extends AbstractAuthenticationTargetU
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                                 Authentication authentication) {
-        String accessToken = jwtService.extractAccessToken(request).orElseThrow();
-        String email = jwtService.extractEmail(accessToken).orElseThrow();
+        String accessToken = jwtService.extractAccessToken(request).orElseThrow(InvalidJwtException::new);
+        String email = jwtService.extractEmail(accessToken).orElseThrow(InvalidJwtException::new);
 
-        logout(email, accessToken);
+        logout(email);
     }
 
-    public void logout(String email, String accessToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findById(email).orElseThrow();
+    public void logout(String email) {
+        RefreshToken refreshToken = refreshTokenRepository.findById(email).orElseThrow(RefreshTokenNotFoundException::new);
         refreshTokenRepository.delete(refreshToken);
     }
 }
