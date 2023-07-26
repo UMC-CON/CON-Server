@@ -15,7 +15,7 @@ public enum BaseResponseStatus {
     RESPONSE_ERROR(false, HttpStatus.NOT_FOUND.value(), "값을 불러오는데 실패하였습니다."),
     RESPONSE_DUPLICATED_EMAIL(false, HttpStatus.CONFLICT.value(), "이메일이 중복 됩니다."),
     RESPONSE_DUPLICATED_NAME(false, HttpStatus.CONFLICT.value(), "이름이 중복 됩니다."),
-    RESPONSE_CHECK_PASSWORD(false, HttpStatus.NO_CONTENT.value(), "비밀번호가 일치하지 않습니다"),
+    RESPONSE_CHECK_PASSWORD(false, HttpStatus.CONFLICT.value(), "비밀번호가 일치하지 않습니다"),
     RESPONSE_MEMBER_NOT_FOUND(false, HttpStatus.NOT_FOUND.value(), "멤버를 찾을 수 없습니다"),
 
     EMPTY_JWT(false, HttpStatus.UNAUTHORIZED.value(), "JWT를 입력해주세요."),
