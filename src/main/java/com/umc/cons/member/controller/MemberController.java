@@ -3,7 +3,6 @@ package com.umc.cons.member.controller;
 import com.umc.cons.common.annotation.LoginMember;
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
-import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.dto.MemberDto;
 import com.umc.cons.member.dto.OAuth2MemberDto;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController()
@@ -30,11 +28,11 @@ public class MemberController {
         boolean checkPassword = memberService.checkPassword(memberDto.getPassword(), memberDto.getCheckPassword());
 
         if (isDuplicatedEmail) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_EMAIL);
+            return new BaseResponse(BaseResponseStatus.REQUEST_DUPLICATED_EMAIL);
         }
 
         if (isDuplicatedName) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_NAME);
+            return new BaseResponse(BaseResponseStatus.REQUEST_DUPLICATED_NAME);
         }
 
         if (checkPassword) {
@@ -44,7 +42,7 @@ public class MemberController {
             return new BaseResponse(BaseResponseStatus.SUCCESS);
         }
 
-        return new BaseResponse(BaseResponseStatus.RESPONSE_CHECK_PASSWORD);
+        return new BaseResponse(BaseResponseStatus.REQUEST_CHECK_PASSWORD);
 
     }
 
@@ -53,7 +51,7 @@ public class MemberController {
         boolean isDuplicatedName = memberService.isDuplicatedName(oAuth2MemberDto.getName());
 
         if(isDuplicatedName) {
-            return new BaseResponse(BaseResponseStatus.RESPONSE_DUPLICATED_NAME);
+            return new BaseResponse(BaseResponseStatus.REQUEST_DUPLICATED_NAME);
         }
 
         memberService.registerOAuth2Member(member, oAuth2MemberDto.getName());
