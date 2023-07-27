@@ -4,7 +4,6 @@ import com.umc.cons.common.jwt.exception.InvalidJwtException;
 import com.umc.cons.common.jwt.service.JwtService;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.repository.MemberRepository;
-import com.umc.cons.member.dto.MemberDto;
 import com.umc.cons.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
