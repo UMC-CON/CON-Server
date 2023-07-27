@@ -5,13 +5,17 @@ import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.dto.MemberDto;
+import com.umc.cons.member.dto.MemberPageResponse;
 import com.umc.cons.member.dto.OAuth2MemberDto;
 import com.umc.cons.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 @RestController()
 @RequestMapping("/members")
@@ -57,6 +61,13 @@ public class MemberController {
         memberService.registerOAuth2Member(member, oAuth2MemberDto.getName());
 
         return new BaseResponse(BaseResponseStatus.SUCCESS);
+    }
+
+    @GetMapping()
+    public BaseResponse<MemberPageResponse> getMembersByName(@RequestParam("name") @NotEmpty String name, Pageable pageable) {
+        MemberPageResponse page = memberService.findAllByName(name, pageable);
+
+        return new BaseResponse(page);
     }
 
 }

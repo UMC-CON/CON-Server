@@ -5,8 +5,6 @@ import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.common.jwt.exception.InvalidJwtException;
 import com.umc.cons.common.refreshtoken.exception.RefreshTokenNotFoundException;
 import com.umc.cons.member.exception.MemberNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
