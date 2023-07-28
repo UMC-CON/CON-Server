@@ -6,9 +6,15 @@ import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Builder
+@Getter
 public class NotificationDto {
 
 	private String title;
