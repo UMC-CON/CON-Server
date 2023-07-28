@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 
 import com.umc.cons.common.util.BaseTimeEntity;
 import com.umc.cons.member.domain.entity.Member;
+import com.umc.cons.notification.dto.NotificationRequestDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,5 +53,11 @@ public class Notification extends BaseTimeEntity {
 
 	public void deleteNotification() {
 		this.isDeleted = true;
+	}
+
+	public void updateNotification(NotificationRequestDto requestDto) {
+		this.email = requestDto.getEmail();
+		this.title = requestDto.getTitle();
+		this.time = requestDto.getTime();
 	}
 }

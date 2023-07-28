@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 import com.umc.cons.notification.domain.repository.NotificationRepository;
+import com.umc.cons.notification.dto.NotificationRequestDto;
 import com.umc.cons.notification.dto.NotificationResponseDto;
 import com.umc.cons.notification.exception.NotificationNotFoundException;
 
@@ -41,4 +42,13 @@ public class NotificationService {
 		notificationRepository.save(notification);
 	}
 
+	public Notification updateNotification(NotificationRequestDto requestDto) {
+		Notification notification = notificationRepository.findByUuid(requestDto.getUuid())
+			.orElseThrow(NotificationNotFoundException::new);
+
+		notification.updateNotification(requestDto);
+		notificationRepository.save(notification);
+
+		return notification;
+	}
 }

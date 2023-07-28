@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 import com.umc.cons.notification.dto.NotificationDto;
+import com.umc.cons.notification.dto.NotificationRequestDto;
 import com.umc.cons.notification.dto.NotificationResponseDto;
 import com.umc.cons.notification.service.NotificationService;
 
@@ -50,6 +52,14 @@ public class NotificationController {
 		notificationService.deleteNotification(uuid);
 
 		return new BaseResponse(BaseResponseStatus.SUCCESS);
+	}
+
+	@PutMapping
+	public BaseResponse<NotificationResponseDto> updateNotification(@RequestBody NotificationRequestDto requestDto) {
+		Notification notification = notificationService.updateNotification(requestDto);
+		NotificationResponseDto responseDto = NotificationResponseDto.of(notification);
+
+		return new BaseResponse<>(responseDto);
 	}
 
 }
