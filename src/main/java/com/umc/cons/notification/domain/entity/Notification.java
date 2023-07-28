@@ -28,6 +28,8 @@ public class Notification extends BaseTimeEntity {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
+	private String email;
+
 	private String title;
 
 	private LocalDateTime time;
@@ -36,9 +38,9 @@ public class Notification extends BaseTimeEntity {
 	private boolean isDeleted = false;
 
 	@Builder
-	public Notification(Long id, Member member, String title, LocalDateTime time) {
-		this.id = id;
+	public Notification(Member member, String email, String title, LocalDateTime time) {
 		this.member = member;
+		this.email = email;
 		this.title = title;
 		this.time = time;
 	}
