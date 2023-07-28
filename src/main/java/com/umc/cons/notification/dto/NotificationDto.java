@@ -1,6 +1,7 @@
 package com.umc.cons.notification.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
@@ -29,6 +30,7 @@ public class NotificationDto {
 			.title(notificationDto.title)
 			.time(notificationDto.time)
 			.member(member)
+			.uuid(UUID.randomUUID().toString())
 			.build();
 	}
 }

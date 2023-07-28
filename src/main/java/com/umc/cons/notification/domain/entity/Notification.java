@@ -39,11 +39,14 @@ public class Notification extends BaseTimeEntity {
 	@Column(name = "is_deleted", columnDefinition = "boolean default false")
 	private boolean isDeleted = false;
 
+	private String uuid;
+
 	@Builder
-	public Notification(Member member, String email, String title, LocalDateTime time) {
+	public Notification(Member member, String email, String title, LocalDateTime time, String uuid) {
 		this.member = member;
 		this.email = email;
 		this.title = title;
 		this.time = time;
+		this.uuid = uuid;
 	}
 }

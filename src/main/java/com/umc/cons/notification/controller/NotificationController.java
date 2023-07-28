@@ -2,10 +2,12 @@ package com.umc.cons.notification.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.umc.cons.common.annotation.LoginMember;
@@ -41,6 +43,13 @@ public class NotificationController {
 		List<NotificationResponseDto> notifications = notificationService.getNotifications(member);
 
 		return new BaseResponse<>(notifications);
+	}
+
+	@DeleteMapping
+	public BaseResponse<BaseResponseStatus> deleteNotification(@RequestParam String uuid) {
+		notificationService.deleteNotification(uuid);
+
+		return new BaseResponse(BaseResponseStatus.SUCCESS);
 	}
 
 }

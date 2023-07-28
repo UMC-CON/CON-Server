@@ -22,11 +22,14 @@ public class NotificationResponseDto {
 
 	private LocalDateTime time;
 
+	private String uuid;
+
 	public static NotificationResponseDto of(Notification notification) {
 		return NotificationResponseDto.builder()
 			.title(notification.getTitle())
 			.email(notification.getEmail())
 			.time(notification.getTime())
+			.uuid(notification.getUuid())
 			.build();
 	}
 }
