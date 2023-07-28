@@ -37,7 +37,8 @@ public class NotificationService {
 		Notification notification = notificationRepository.findByUuid(uuid)
 			.orElseThrow(NotificationNotFoundException::new);
 
-		notificationRepository.delete(notification);
+		notification.deleteNotification();
+		notificationRepository.save(notification);
 	}
 
 }

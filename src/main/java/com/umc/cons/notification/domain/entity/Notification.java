@@ -49,4 +49,8 @@ public class Notification extends BaseTimeEntity {
 		this.time = time;
 		this.uuid = uuid;
 	}
+
+	public void deleteNotification() {
+		this.isDeleted = true;
+	}
 }
