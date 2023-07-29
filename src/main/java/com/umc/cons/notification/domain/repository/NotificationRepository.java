@@ -17,6 +17,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	public Optional<Notification> findByUuid(String uuid);
 
-	@Query("SELECT n FROM Notification n WHERE n.isDeleted = false AND FUNCTION('minute', n.time) = FUNCTION('minute', :time)")
 	public List<Notification> findAllByTime(LocalDateTime time);
 }
