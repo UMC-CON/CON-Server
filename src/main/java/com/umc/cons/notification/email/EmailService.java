@@ -26,7 +26,9 @@ public class EmailService {
 	@Scheduled(cron = "0 * * * * *")
 	@Async
 	public void sendMail() {
-		LocalDateTime now = LocalDateTime.now().withSecond(0);
+		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+
+		log.info(now.toString());
 
 		List<Notification> notifications = notificationService.findNotificationsByTime(now);
 
