@@ -26,10 +26,8 @@ public class EmailService {
 	@Scheduled(cron = "0 * * * * *")
 	@Async
 	public void sendMail() {
-		// Get current time
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.now().withSecond(0);
 
-		// Find notifications with matching time from the database
 		List<Notification> notifications = notificationService.findNotificationsByTime(now);
 
 		for (Notification notification : notifications) {
