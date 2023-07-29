@@ -1,5 +1,6 @@
 package com.umc.cons.notification.domain.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +15,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Query("SELECT n FROM  Notification  n WHERE n.isDeleted = false AND n.member = :member")
 	public List<Notification> findAllByMember(Member member);
 
-	Optional<Notification> findByUuid(String uuid);
+	public Optional<Notification> findByUuid(String uuid);
+
+	@Query("SELECT n FROM Notification n WHERE n.isDeleted = false AND FUNCTION('minute', n.time) = FUNCTION('minute', :time)")
+	public List<Notification> findAllByTime(LocalDateTime time);
 }

@@ -1,5 +1,6 @@
 package com.umc.cons.notification.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,4 +52,9 @@ public class NotificationService {
 
 		return notification;
 	}
+
+	public List<Notification> findNotificationsByTime(LocalDateTime time) {
+		return notificationRepository.findAllByTime(time);
+	}
+
 }
