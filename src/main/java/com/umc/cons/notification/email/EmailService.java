@@ -2,6 +2,7 @@ package com.umc.cons.notification.email;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.umc.cons.notification.domain.entity.Notification;
@@ -16,6 +17,7 @@ public class EmailService {
 
 	private final JavaMailSender javaMailSender;
 
+	@Async
 	public void sendMail(Notification notification) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 		String title = notification.getTitle();
