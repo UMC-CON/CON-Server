@@ -1,6 +1,7 @@
 package com.umc.cons.member.dto;
 
 import com.umc.cons.member.domain.entity.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponse {
-    private String name;
+	private String name;
+	private String imageUrl;
+	private String introduction;
 
-    public static MemberResponse of(Member member) {
-        return MemberResponse.builder()
-                .name(member.getName())
-                .build();
-    }
+	public static MemberResponse of(Member member) {
+		return MemberResponse.builder()
+			.name(member.getName())
+			.imageUrl(member.getImageUrl())
+			.introduction(member.getIntroduction())
+			.build();
+	}
 }
