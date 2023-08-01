@@ -41,8 +41,6 @@ public class MemberDto {
 			.password(passwordEncoder.encode(memberDto.getPassword()))
 			.name(memberDto.getName())
 			.socialType(SocialType.OUR)
-			.isDeleted(false)
-			.introduction("자기소개가 없습니다")
 			.role(Role.USER)
 			.build();
 	}

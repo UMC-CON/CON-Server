@@ -60,7 +60,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/oauth2/sign-up")
-	private BaseResponse<BaseResponseStatus> registration(@RequestBody OAuth2MemberDto oAuth2MemberDto,
+	public BaseResponse<BaseResponseStatus> registration(@RequestBody OAuth2MemberDto oAuth2MemberDto,
 		@LoginMember Member member) {
 		boolean isDuplicatedName = memberService.isDuplicatedName(oAuth2MemberDto.getName());
 

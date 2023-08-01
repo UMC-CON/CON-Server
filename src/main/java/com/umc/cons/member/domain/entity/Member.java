@@ -50,8 +50,8 @@ public class Member extends BaseTimeEntity {
 	private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
 
 	@Builder
-	public Member(Long id, String email, String password, String imageUrl, String name,
-		SocialType socialType, String socialId, Role role, boolean isDeleted, String introduction) {
+	public Member(String email, String password, String imageUrl, String name,
+		SocialType socialType, String socialId, Role role) {
 		this.email = email;
 		this.password = password;
 		this.imageUrl = imageUrl;
@@ -59,8 +59,8 @@ public class Member extends BaseTimeEntity {
 		this.socialType = socialType;
 		this.socialId = socialId;
 		this.role = role;
-		this.isDeleted = isDeleted;
-		this.introduction = introduction;
+		this.isDeleted = false;
+		this.introduction = "자기소개를 입력하세요!";
 	}
 
 	public void registerOAuth2User(String name) {
