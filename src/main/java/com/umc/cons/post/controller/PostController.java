@@ -31,7 +31,7 @@ public class PostController {
     public BaseResponse<BaseResponseStatus> write(@RequestBody PostWithRecordsDTO postWithRecordsDTO){
         List<RecordDTO> recordDTOList = postWithRecordsDTO.getRecordDTOList();
 
-        if(recordDTOList == null || recordDTOList.isEmpty()){
+        if (recordDTOList == null || recordDTOList.isEmpty()) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
 
@@ -45,21 +45,17 @@ public class PostController {
     // 게시글 Id로 조회
     @GetMapping("/{id}")
     public BaseResponse<PostResponseDTO> readId(@PathVariable Long id){
-        try{
-            Post post = postService.findById(id);
-            if(post.isDeleted()){
-                return new BaseResponse<>(RESPONSE_ERROR);
-            } else{
-                List<RecordResponseDTO> recordDTOLists = post.getRecords().stream()
-                        .filter(record -> !record.isDeleted())
-                        .map(RecordResponseDTO::of)
-                        .collect(Collectors.toList());
+        try {
+            Post post = postService.findByIdAndNotDeleted(id);
+            List<RecordResponseDTO> recordDTOLists = post.getRecords().stream()
+                    .filter(record -> !record.isDeleted())
+                    .map(RecordResponseDTO::of)
+                    .collect(Collectors.toList());
 
-                PostResponseDTO responseDTO = PostResponseDTO.convertToResponseDTO(post);
-                responseDTO.setRecordList(recordDTOLists);
-                return new BaseResponse<>(responseDTO);
-            }
-        }catch (IllegalArgumentException e){
+            PostResponseDTO responseDTO = PostResponseDTO.convertToResponseDTO(post);
+            responseDTO.setRecordList(recordDTOLists);
+            return new BaseResponse<>(responseDTO);
+        } catch (IllegalArgumentException e) {
             return new BaseResponse<>(RESPONSE_ERROR);
         }
     }
@@ -68,8 +64,8 @@ public class PostController {
     @GetMapping
     public BaseResponse<Page<PostResponseDTO>> findAll(Pageable pageable){
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
-        Page<Post> posts = postService.findAll(pageable);
-        Page<PostResponseDTO> responsePage = posts.map(post ->{
+        Page<Post> posts = postService.findAllNotDeleted(pageable);
+        Page<PostResponseDTO> responsePage = posts.map(post -> {
             List<RecordResponseDTO> recordDTOList = post.getRecords().stream()
                     .filter(record -> !record.isDeleted())
                     .map(RecordResponseDTO::of)
@@ -87,8 +83,8 @@ public class PostController {
     public BaseResponse<Page<PostResponseDTO>> getPostsByMemberId(@PathVariable Long memberId, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
         try{
-            Page<Post> posts = postService.getPostsByMemberId(memberId, pageable);
-            Page<PostResponseDTO> responsePage = posts.map(post ->{
+            Page<Post> posts = postService.getPostsByMemberIdAndNotDeleted(memberId, pageable);
+            Page<PostResponseDTO> responsePage = posts.map(post -> {
                 List<RecordResponseDTO> recordDTOList = post.getRecords().stream()
                         .filter(record -> !record.isDeleted())
                         .map(RecordResponseDTO::of)
@@ -98,8 +94,9 @@ public class PostController {
 
                 return responseDTO;
             });
+
             return new BaseResponse<>(responsePage);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new BaseResponse<>(RESPONSE_ERROR);
         }
     }
@@ -117,7 +114,11 @@ public class PostController {
     // 게시글 삭제
     @DeleteMapping("/{id}")
     public BaseResponse<BaseResponseStatus> delete(@PathVariable Long id){
-        postService.delete(id);
-        return new BaseResponse<>(SUCCESS);
+        try{
+            postService.delete(id);
+            return new BaseResponse<>(SUCCESS);
+        } catch (IllegalArgumentException e) {
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
     }
 }

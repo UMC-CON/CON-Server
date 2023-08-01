@@ -8,11 +8,13 @@ import com.umc.cons.post.dto.PostDTO;
 import com.umc.cons.record.dto.RecordDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -78,5 +80,37 @@ public class PostService {
             record.setDeleted(true);
         }
         postRepository.save(post);
+    }
+
+    // 게시물이 삭제되었는지 확인하는 메소드
+    public Post findByIdAndNotDeleted(Long id) {
+        Post post = findById(id);
+        if(post.isDeleted()) {
+            throw new IllegalArgumentException("삭제된 게시물입니다.");
+        }
+        return post;
+    }
+
+    public Page<Post> getPostsByMemberIdAndNotDeleted(Long memberId, Pageable pageable) {
+        Page<Post> posts = getPostsByMemberId(memberId, pageable);
+        List<Post> notDeletedPosts = new ArrayList<>();
+        for (Post post : posts.getContent()) {
+            if (!post.isDeleted()) {
+                notDeletedPosts.add(post);
+            }
+        }
+        return new PageImpl<>(notDeletedPosts, pageable, notDeletedPosts.size());
+    }
+
+    public Page<Post> findAllNotDeleted(Pageable pageable) {
+        Page<Post> posts = findAll(pageable);
+        // 검증을 여기서 추가
+        List<Post> filteredPosts = new ArrayList<>();
+        for (Post post : posts.getContent()) {
+            if (!post.isDeleted()) {
+                filteredPosts.add(post);
+            }
+        }
+        return new PageImpl<>(filteredPosts, pageable, filteredPosts.size());
     }
 }
