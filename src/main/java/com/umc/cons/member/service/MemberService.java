@@ -10,6 +10,7 @@ import com.umc.cons.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +74,11 @@ public class MemberService {
                 .currentPage(pageable.getPageNumber())
                 .memberResponses(memberResponse)
                 .build();
+    }
+
+    public void updatePassword(Member member, PasswordEncoder passwordEncoder, String password) {
+        member.updatePassword(passwordEncoder.encode(password));
+
+        memberRepository.save(member);
     }
 }
