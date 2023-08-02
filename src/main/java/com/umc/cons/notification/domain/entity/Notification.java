@@ -37,8 +37,8 @@ public class Notification extends BaseTimeEntity {
 
 	private LocalDateTime time;
 
-	@Column(name = "is_deleted", columnDefinition = "boolean default false")
-	private boolean isDeleted = false;
+	@Column(name = "is_deleted")
+	private boolean isDeleted;
 
 	private String uuid;
 

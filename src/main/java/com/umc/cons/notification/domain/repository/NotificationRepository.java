@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.umc.cons.member.domain.entity.Member;
@@ -18,4 +19,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	public Optional<Notification> findByUuid(String uuid);
 
 	public List<Notification> findAllByTime(LocalDateTime time);
+
+	@Modifying
+	@Query("UPDATE Notification n SET n.isDeleted = true WHERE n.member = :member ")
+	public void updateDeleteAllByMember(Member member);
 }

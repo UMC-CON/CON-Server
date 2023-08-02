@@ -1,10 +1,12 @@
 package com.umc.cons.member.controller;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,6 +96,13 @@ public class MemberController {
 		}
 
 		return new BaseResponse<>(BaseResponseStatus.REQUEST_CHECK_PASSWORD);
+	}
+
+	@DeleteMapping()
+	public BaseResponse<BaseResponseStatus> deleteMember(@LoginMember Member member, HttpServletResponse response) {
+		memberService.deleteMember(member);
+
+		return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 	}
 
 }

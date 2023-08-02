@@ -7,6 +7,10 @@ import com.umc.cons.member.domain.repository.MemberRepository;
 import com.umc.cons.member.dto.MemberPageResponse;
 import com.umc.cons.member.dto.MemberResponse;
 import com.umc.cons.member.exception.MemberNotFoundException;
+import com.umc.cons.notification.domain.entity.Notification;
+import com.umc.cons.notification.domain.repository.NotificationRepository;
+import com.umc.cons.notification.service.NotificationService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +29,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final HttpServletRequest request;
     private final JwtService jwtService;
+    private final NotificationRepository notificationRepository;
 
     public boolean isDuplicatedEmail(String email) {
         return memberRepository.existsByEmail(email);
@@ -78,6 +83,14 @@ public class MemberService {
 
     public void updatePassword(Member member, PasswordEncoder passwordEncoder, String password) {
         member.updatePassword(passwordEncoder.encode(password));
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void deleteMember(Member member) {
+        member.deleteMember();
+        notificationRepository.updateDeleteAllByMember(member);
 
         memberRepository.save(member);
     }

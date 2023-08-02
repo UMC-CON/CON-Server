@@ -15,6 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     public boolean existsByName(String name);
 
+    @Query(value = "SELECT m FROM Member m WHERE m.isDeleted = false AND m.email = :email")
     public Optional<Member> findByEmail(String email);
 
     public Optional<Member> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
