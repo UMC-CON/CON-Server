@@ -35,6 +35,7 @@ public class NotificationService {
 		return notifications;
 	}
 
+	@Transactional
 	public void deleteNotification(String uuid) {
 		Notification notification = notificationRepository.findByUuid(uuid)
 			.orElseThrow(NotificationNotFoundException::new);
@@ -43,6 +44,7 @@ public class NotificationService {
 		notificationRepository.save(notification);
 	}
 
+	@Transactional
 	public Notification updateNotification(NotificationRequestDto requestDto) {
 		Notification notification = notificationRepository.findByUuid(requestDto.getUuid())
 			.orElseThrow(NotificationNotFoundException::new);
@@ -53,6 +55,7 @@ public class NotificationService {
 		return notification;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Notification> findNotificationsByTime(LocalDateTime time) {
 		return notificationRepository.findAllByTime(time);
 	}

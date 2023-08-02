@@ -47,11 +47,13 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void registerOAuth2Member(Member member, String name) {
         member.registerOAuth2User(name);
         memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public Member getLoginMember() {
         String accessToken = jwtService.extractAccessToken(request).orElseThrow(InvalidJwtException::new);
         String email = jwtService.extractEmail(accessToken).orElseThrow(InvalidJwtException::new);
@@ -66,7 +68,8 @@ public class MemberService {
         return getMemberPageResponse(members, pageable);
     }
 
-    private MemberPageResponse getMemberPageResponse(Page<Member> members, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public MemberPageResponse getMemberPageResponse(Page<Member> members, Pageable pageable) {
 
         List<MemberResponse> memberResponse = members
                 .getContent()
@@ -81,6 +84,7 @@ public class MemberService {
                 .build();
     }
 
+    @Transactional
     public void updatePassword(Member member, PasswordEncoder passwordEncoder, String password) {
         member.updatePassword(passwordEncoder.encode(password));
 
