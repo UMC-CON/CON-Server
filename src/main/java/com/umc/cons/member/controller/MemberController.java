@@ -86,20 +86,14 @@ public class MemberController {
 		@LoginMember Member member) {
 		boolean checkMemberPassword = passwordEncoder.matches(passwordRequestDto.getCurrentPassword(),
 			member.getPassword());
-		boolean checkPassword = memberService.checkPassword(passwordRequestDto.getPassword(),
-			passwordRequestDto.getCheckPassword());
 
-		if (!checkMemberPassword) {
-			return new BaseResponse<>(BaseResponseStatus.REQUEST_CHECK_PASSWORD);
+		if (checkMemberPassword) {
+			memberService.updatePassword(member, passwordEncoder, passwordRequestDto.getPassword());
+
+			return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 		}
 
-		if (!checkPassword) {
-			return new BaseResponse<>(BaseResponseStatus.REQUEST_CHECK_PASSWORD);
-		}
-
-		memberService.updatePassword(member, passwordEncoder, passwordRequestDto.getPassword());
-
-		return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+		return new BaseResponse<>(BaseResponseStatus.REQUEST_CHECK_PASSWORD);
 	}
 
 }
