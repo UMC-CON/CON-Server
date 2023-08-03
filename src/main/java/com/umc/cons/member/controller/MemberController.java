@@ -20,8 +20,10 @@ import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.dto.MemberDto;
 import com.umc.cons.member.dto.MemberPageResponse;
+import com.umc.cons.member.dto.MemberResponse;
 import com.umc.cons.member.dto.OAuth2MemberDto;
 import com.umc.cons.member.dto.PasswordRequestDto;
+import com.umc.cons.member.dto.ProfileRequestDto;
 import com.umc.cons.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -105,4 +107,19 @@ public class MemberController {
 		return new BaseResponse<>(BaseResponseStatus.SUCCESS);
 	}
 
+	@GetMapping("/profile")
+	public BaseResponse<MemberResponse> getProfile(@LoginMember Member member) {
+		MemberResponse memberResponse = MemberResponse.of(member);
+
+		return new BaseResponse<>(memberResponse);
+	}
+
+	@PostMapping("/profile")
+	public BaseResponse<BaseResponseStatus> updateProfile(@RequestBody ProfileRequestDto profileRequest,
+		@LoginMember Member member) {
+
+		memberService.updateProfile(member, profileRequest);
+
+		return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+	}
 }

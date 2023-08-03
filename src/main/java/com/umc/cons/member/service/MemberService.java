@@ -6,6 +6,7 @@ import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.member.domain.repository.MemberRepository;
 import com.umc.cons.member.dto.MemberPageResponse;
 import com.umc.cons.member.dto.MemberResponse;
+import com.umc.cons.member.dto.ProfileRequestDto;
 import com.umc.cons.member.exception.MemberNotFoundException;
 import com.umc.cons.notification.domain.entity.Notification;
 import com.umc.cons.notification.domain.repository.NotificationRepository;
@@ -95,6 +96,13 @@ public class MemberService {
     public void deleteMember(Member member) {
         member.deleteMember();
         notificationRepository.updateDeleteAllByMember(member);
+
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void updateProfile(Member member, ProfileRequestDto profileRequest) {
+        member.updateProfile(profileRequest);
 
         memberRepository.save(member);
     }

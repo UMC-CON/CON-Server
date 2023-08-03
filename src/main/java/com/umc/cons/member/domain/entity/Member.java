@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.umc.cons.common.util.BaseTimeEntity;
+import com.umc.cons.member.dto.ProfileRequestDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -74,6 +75,12 @@ public class Member extends BaseTimeEntity {
 
 	public void deleteMember() {
 		this.isDeleted = true;
+	}
+
+	public void updateProfile(ProfileRequestDto requestDto) {
+		this.imageUrl = requestDto.getImageUrl();
+		this.name = requestDto.getName();
+		this.introduction = requestDto.getIntroduction();
 	}
 
 }
