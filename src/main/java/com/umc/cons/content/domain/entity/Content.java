@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 public class Content {
     //TDD: generated value 에 대한 고민 필요
     @Id
-//    @GeneratedValue
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
+    @Column(name="name")
     private String name;
-
+    @Column(name = "image")
     private String image;
-
+    @Column(name = "genre")
     private String genre;
-
+    @Column(name = "created_at")
     private LocalDateTime created_at;
-
+    @Column(name = "modified_at")
     private LocalDateTime modified_at;
 
 

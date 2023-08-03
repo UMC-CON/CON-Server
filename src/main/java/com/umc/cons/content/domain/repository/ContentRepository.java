@@ -1,6 +1,7 @@
 package com.umc.cons.content.domain.repository;
 
 import com.umc.cons.content.domain.entity.Content;
+import com.umc.cons.content.exception.NotExistContentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
