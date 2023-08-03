@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.lang.reflect.Member;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
@@ -27,7 +28,11 @@ public class ContentServiceTest {
         //given
         Content content = new Content();
         content.setId(1L);
-
+        content.setName("Example Content 1");
+        content.setImage("example1.jpg");
+        content.setGenre("Action");
+        content.setModified_at(LocalDateTime.now());
+        content.setCreated_at(LocalDateTime.now());
         //when
         Long savedId = contentService.join(content);
 
@@ -41,8 +46,16 @@ public class ContentServiceTest {
         Long duplicatedId = 1L;
         Content content1 = new Content();
         content1.setId(duplicatedId);
+        content1.setName("Example Content 1");
+        content1.setImage("example1.jpg");
+        content1.setGenre("Action");
+        content1.setModified_at(LocalDateTime.now());
+        content1.setCreated_at(LocalDateTime.now());
         Content content2 = new Content();
         content2.setId(duplicatedId);
+        content2.setName("Example Content 2");
+        content2.setImage("example2.jpg");
+        content2.setGenre("Social");
         //when
         contentService.join(content1);
         contentService.join(content2);

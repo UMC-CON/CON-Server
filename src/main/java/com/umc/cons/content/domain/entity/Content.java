@@ -2,6 +2,7 @@ package com.umc.cons.content.domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,20 +10,22 @@ import java.time.LocalDateTime;
 @Entity @Table(name = "content")
 @Getter@Setter
 public class Content {
-    //TDD: generated value 에 대한 고민 필요
+    //id 값은 외부 DB값을 사용하므로 생성하지 않음
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name="name")
+    @Column(name="name",nullable = false)
     private String name;
-    @Column(name = "image")
+    @Column(name = "image",nullable = false)
     private String image;
-    @Column(name = "genre")
+    @Column(name = "genre",nullable = false)
     private String genre;
-    @Column(name = "created_at")
+    @Column(name = "is_deleted",nullable = false)
+    @ColumnDefault("false")
+    private boolean is_deleted;
+    @Column(name = "created_at",nullable = false)
     private LocalDateTime created_at;
-    @Column(name = "modified_at")
+    @Column(name = "modified_at",nullable = false)
     private LocalDateTime modified_at;
 
 
