@@ -117,6 +117,11 @@ public class MemberController {
 	@PostMapping("/profile")
 	public BaseResponse<BaseResponseStatus> updateProfile(@RequestBody ProfileRequestDto profileRequest,
 		@LoginMember Member member) {
+		boolean isDuplicatedName = memberService.isDuplicatedName(profileRequest.getName());
+
+		if (isDuplicatedName) {
+			return new BaseResponse<>(BaseResponseStatus.REQUEST_DUPLICATED_NAME);
+		}
 
 		memberService.updateProfile(member, profileRequest);
 
