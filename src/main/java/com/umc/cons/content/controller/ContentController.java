@@ -19,18 +19,15 @@ import org.springframework.web.bind.annotation.*;
 public class ContentController {
 
     private final ContentService contentService;
-//    @PostMapping("/save")
-//    public BaseResponse<ContentResponseDto> createContents(@RequestBody MultipleContentRequestDto multipleContentRequestDto){
-//
-//        return new BaseResponse<>(contentService.createContents(multipleContentRequestDto));
-//    }
-    @PostMapping("/save")
+
+    @PostMapping("")
     public BaseResponse<MultipleContentResponseDto> createContents(@RequestBody MultipleContentRequestDto multipleContentRequestDto){
         MultipleContentResponseDto responseDto = contentService.createContents(multipleContentRequestDto);
         return new BaseResponse<>(responseDto);
     }
-//    @PutMapping("/save")
-//    public BaseResponse<ContentResponseDto> updateContent(@RequestBody ContentRequestDto contentRequestDto){
-//        return new BaseResponse<>(contentService.createContent(contentRequestDto));
-//    }
+    @GetMapping("/{id}")
+    public BaseResponse<ContentResponseDto> getContent(@PathVariable Long id){
+        return new BaseResponse<>(contentService.getContent(id));
+    }
+
 }

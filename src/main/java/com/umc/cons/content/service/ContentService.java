@@ -78,7 +78,22 @@ public class ContentService {
         }
         return new MultipleContentResponseDto(contentResponseDtos);
     }
-
+    //조회 메서드
+    /**
+     * 콘텐츠 정보 조회
+     */
+    public ContentResponseDto getContent(Long id){
+        Content content = contentRepository.findOne(id);
+        if(content ==null){
+            throw new NotExistContentException("조회할 콘텐츠가 데이터베이스에 존재하지 않습니다.");
+        }
+        ContentResponseDto contentResponseDto = new ContentResponseDto();
+        contentResponseDto.setId(content.getId());
+        contentResponseDto.setName(content.getName());
+        contentResponseDto.setImage(content.getImage());
+        contentResponseDto.setGenre(content.getGenre());
+        return contentResponseDto;
+    }
     //수정 메서드
     /**
      * 콘텐츠 정보 업데이트
