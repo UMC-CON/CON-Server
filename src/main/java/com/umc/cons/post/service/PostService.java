@@ -1,28 +1,58 @@
 package com.umc.cons.post.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.umc.cons.post.domain.entity.Post;
-import com.umc.cons.record.domain.entity.Record;
 import com.umc.cons.post.domain.repository.PostRepository;
-import com.umc.cons.record.domain.repository.RecordRepository;
 import com.umc.cons.post.dto.PostDTO;
-import com.umc.cons.record.dto.RecordDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final PostRepository postRepository;
-    private final RecordRepository recordRepository;
+
+    @Value("${application.bucket.name}")
+    private String bucketName;
+
+    @Autowired
+    private AmazonS3 s3Client;
+
+    public String uploadImage(MultipartFile file){
+        File fileObj = convertMultiPartFileToFile(file);
+        String fileName = System.currentTimeMillis()+"_"+file.getOriginalFilename();
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        fileObj.delete();
+        return "https://" + bucketName + ".s3.amazonaws.com/" + fileName;
+    }
+
+    private File convertMultiPartFileToFile(MultipartFile file){
+        File convertedFile = new File(file.getOriginalFilename());
+        try(FileOutputStream fos = new FileOutputStream(convertedFile)){
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            log.error("Error convertiong multipartFile to file", e);
+        }
+        return convertedFile;
+    }
 
     public Post findById(Long id){
         return postRepository.findById(id)
@@ -41,32 +71,70 @@ public class PostService {
     }
 
     @Transactional
-    public Post saveWithRecords(PostDTO postDTO, List<RecordDTO> recordDTOList){
+    public Post save(PostDTO postDTO){
+        // memberId, contentId, title, content 값이 없으면 예외 처리
+        if (postDTO.getMemberId() == null || postDTO.getContentId() == null ||
+                !StringUtils.hasText(postDTO.getTitle()) || !StringUtils.hasText(postDTO.getContent())) {
+            throw new IllegalArgumentException("필수 입력 사항이 누락되었습니다.");
+        }
+
         Post post = new Post();
         post.update(postDTO);
+
         Post savedPost = postRepository.save(post);
 
-        for(RecordDTO recordDTO : recordDTOList){
-            Record record = new Record(recordDTO.getContent(), savedPost);
-            recordRepository.save(record);
-            savedPost.addRecord(record);
+        if (postDTO.getImageUrl() != null) {
+            // 만약 DTO에서 imageUrl이 제공되면, 그 값을 직접 사용
+            savedPost.setImageUrl(postDTO.getImageUrl());
+        } else if (postDTO.getImageFile() != null && !postDTO.getImageFile().isEmpty()) {
+            // 만약 imageFile이 제공되면, 이미지를 업로드하고 저장
+            try {
+                String imageUrl = uploadImage(postDTO.getImageFile());
+                savedPost.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                log.error("이미지 업로드 오류", e);
+                return null;
+            }
         }
+
         return savedPost;
     }
 
     @Transactional
     public Post modifyPost(Long id, PostDTO postDTO){
-        Post existingPost = findById(id);
+        Post existingPost = findByIdAndNotDeleted(id);
+
         // 변경 사항이 있을 경우에만 수정
         if (StringUtils.hasText(postDTO.getTitle())) {
             existingPost.setTitle(postDTO.getTitle());
         }
-        if (postDTO.getImageUrl() != null) {
-            existingPost.setImageUrl(postDTO.getImageUrl());
-        }
         Double newScore = postDTO.getScore();
         if (newScore != null && newScore != 0) {
             existingPost.setScore(newScore);
+        }
+        if (StringUtils.hasText(postDTO.getContent())) {
+            existingPost.setContent(postDTO.getContent());
+        }
+        else if (postDTO.getContent() != null && postDTO.getContent().isEmpty()) {
+            existingPost.setContent(postDTO.getContent());
+        }
+
+        String newImageUrl = postDTO.getImageUrl();
+        MultipartFile newImageFile = postDTO.getImageFile();
+
+        if (StringUtils.hasText(newImageUrl)) {
+            existingPost.setImageUrl(newImageUrl);
+        }
+        else if (newImageFile != null && !newImageFile.isEmpty()) {
+            try {
+                String imageUrl = uploadImage(newImageFile);
+                existingPost.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                log.error("이미지 업로드 오류", e);
+                return null;
+            }
+        } else if (newImageUrl != null && newImageUrl.isEmpty()) {
+            existingPost.setImageUrl(null);
         }
 
         return postRepository.save(existingPost);
@@ -74,11 +142,8 @@ public class PostService {
 
     @Transactional
     public void delete(Long id){
-        Post post = findById(id);
+        Post post = findByIdAndNotDeleted(id);
         post.setDeleted(true);
-        for(Record record : post.getRecords()){
-            record.setDeleted(true);
-        }
         postRepository.save(post);
     }
 
