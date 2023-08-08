@@ -5,17 +5,10 @@ import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.dto.*;
 import com.umc.cons.post.service.PostService;
-import com.umc.cons.record.dto.RecordDTO;
-import com.umc.cons.record.dto.RecordResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.umc.cons.common.config.BaseResponseStatus.*;
 
@@ -26,17 +19,26 @@ import static com.umc.cons.common.config.BaseResponseStatus.*;
 public class PostController {
     private final PostService postService;
 
-    // 게시글 등록 및 기록 생성(1개 이상)
-    @PostMapping
-    public BaseResponse<BaseResponseStatus> write(@RequestBody PostWithRecordsDTO postWithRecordsDTO){
-        List<RecordDTO> recordDTOList = postWithRecordsDTO.getRecordDTOList();
-
-        if (recordDTOList == null || recordDTOList.isEmpty()) {
+    // 이미지 파일 업로드
+    @PostMapping("/upload")
+    public BaseResponse<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        if(file == null || file.isEmpty()) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
+        try {
+            String imageUrl = postService.uploadImage(file);
+            return new BaseResponse<>(imageUrl);
+        } catch (Exception e) {
+            return new BaseResponse<>(RESPONSE_ERROR);
+        }
+    }
 
-        Post savedPost = postService.saveWithRecords(postWithRecordsDTO.getPostDTO(), postWithRecordsDTO.getRecordDTOList());
-        if (savedPost == null) {
+    // 게시글 등록
+    @PostMapping
+    public BaseResponse<BaseResponseStatus> write(@ModelAttribute PostDTO postDTO){
+        try {
+            Post savedPost = postService.save(postDTO);
+        } catch (IllegalArgumentException e) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         return new BaseResponse<>(SUCCESS);
@@ -45,17 +47,12 @@ public class PostController {
     // 게시글 Id로 조회
     @GetMapping("/{id}")
     public BaseResponse<PostResponseDTO> readId(@PathVariable Long id){
-        try {
+        try{
             Post post = postService.findByIdAndNotDeleted(id);
-            List<RecordResponseDTO> recordDTOLists = post.getRecords().stream()
-                    .filter(record -> !record.isDeleted())
-                    .map(RecordResponseDTO::of)
-                    .collect(Collectors.toList());
 
             PostResponseDTO responseDTO = PostResponseDTO.convertToResponseDTO(post);
-            responseDTO.setRecordList(recordDTOLists);
             return new BaseResponse<>(responseDTO);
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e){
             return new BaseResponse<>(RESPONSE_ERROR);
         }
     }
@@ -65,16 +62,8 @@ public class PostController {
     public BaseResponse<Page<PostResponseDTO>> findAll(Pageable pageable){
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
         Page<Post> posts = postService.findAllNotDeleted(pageable);
-        Page<PostResponseDTO> responsePage = posts.map(post -> {
-            List<RecordResponseDTO> recordDTOList = post.getRecords().stream()
-                    .filter(record -> !record.isDeleted())
-                    .map(RecordResponseDTO::of)
-                    .collect(Collectors.toList());
-            PostResponseDTO responseDTO = PostResponseDTO.convertToResponseDTO(post);
-            responseDTO.setRecordList(recordDTOList);
+        Page<PostResponseDTO> responsePage = posts.map(PostResponseDTO::convertToResponseDTO);
 
-            return responseDTO;
-        });
         return new BaseResponse<>(responsePage);
     }
 
@@ -84,31 +73,27 @@ public class PostController {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
         try{
             Page<Post> posts = postService.getPostsByMemberIdAndNotDeleted(memberId, pageable);
-            Page<PostResponseDTO> responsePage = posts.map(post -> {
-                List<RecordResponseDTO> recordDTOList = post.getRecords().stream()
-                        .filter(record -> !record.isDeleted())
-                        .map(RecordResponseDTO::of)
-                        .collect(Collectors.toList());
-                PostResponseDTO responseDTO = PostResponseDTO.convertToResponseDTO(post);
-                responseDTO.setRecordList(recordDTOList);
-
-                return responseDTO;
-            });
+            Page<PostResponseDTO> responsePage = posts.map(PostResponseDTO::convertToResponseDTO);
 
             return new BaseResponse<>(responsePage);
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e){
             return new BaseResponse<>(RESPONSE_ERROR);
         }
     }
 
     // 게시글  수정
     @PatchMapping("/{id}")
-    public BaseResponse<BaseResponseStatus> modify(@PathVariable Long id, @RequestBody PostDTO postDTO){
-        Post modifiedPost = postService.modifyPost(id, postDTO);
-        if (modifiedPost == null) {
+    public BaseResponse<BaseResponseStatus> modify(@PathVariable Long id, @ModelAttribute PostDTO postDTO){
+        try{
+            Post modifiedPost = postService.modifyPost(id, postDTO);
+
+            if (modifiedPost == null) {
+                return new BaseResponse<>(REQUEST_ERROR);
+            }
+            return new BaseResponse<>(SUCCESS);
+        } catch (IllegalArgumentException e) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
-        return new BaseResponse<>(SUCCESS);
     }
 
     // 게시글 삭제
