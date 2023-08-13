@@ -1,11 +1,14 @@
 package com.umc.cons.content.domain.entity;
 
+import com.umc.cons.post.domain.entity.Post;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity @Table(name = "content")
 @Getter@Setter
@@ -28,5 +31,6 @@ public class Content {
     @Column(name = "modified_at",nullable = false)
     private LocalDateTime modified_at;
 
-
+    @OneToMany(mappedBy = "content")
+    private List<Post> posts = new ArrayList<>();
 }

@@ -2,6 +2,8 @@ package com.umc.cons.post.controller;
 
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
+import com.umc.cons.content.domain.entity.Content;
+import com.umc.cons.content.service.ContentService;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.dto.*;
 import com.umc.cons.post.service.PostService;
@@ -18,6 +20,7 @@ import static com.umc.cons.common.config.BaseResponseStatus.*;
 @RequestMapping("/app/post")
 public class PostController {
     private final PostService postService;
+    private final ContentService contentService;
 
     // 이미지 파일 업로드
     @PostMapping("/upload")
@@ -35,13 +38,18 @@ public class PostController {
 
     // 게시글 등록
     @PostMapping
-    public BaseResponse<BaseResponseStatus> write(@ModelAttribute PostDTO postDTO){
+    public BaseResponse<BaseResponseStatus> write(@ModelAttribute PostDTO postDTO) {
         try {
-            Post savedPost = postService.save(postDTO);
+            Content contents = contentService.findOne(postDTO.getContentId());
+            if (contents == null) {
+                return new BaseResponse<>(REQUEST_ERROR);
+            }
+            Post savedPost = postService.save(postDTO, contents);
+
+            return new BaseResponse<>(SUCCESS);
         } catch (IllegalArgumentException e) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
-        return new BaseResponse<>(SUCCESS);
     }
 
     // 게시글 Id로 조회

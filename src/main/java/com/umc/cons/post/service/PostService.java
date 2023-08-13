@@ -2,6 +2,7 @@ package com.umc.cons.post.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.domain.repository.PostRepository;
 import com.umc.cons.post.dto.PostDTO;
@@ -71,7 +72,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post save(PostDTO postDTO){
+    public Post save(PostDTO postDTO, Content contents){
         // memberId, contentId, title, content 값이 없으면 예외 처리
         if (postDTO.getMemberId() == null || postDTO.getContentId() == null ||
                 !StringUtils.hasText(postDTO.getTitle()) || !StringUtils.hasText(postDTO.getContent())) {
@@ -79,7 +80,7 @@ public class PostService {
         }
 
         Post post = new Post();
-        post.update(postDTO);
+        post.update(postDTO, contents);
 
         Post savedPost = postRepository.save(post);
 
