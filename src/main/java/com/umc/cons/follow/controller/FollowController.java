@@ -19,18 +19,23 @@ public class FollowController {
      *  follow 저장 로직
      *  A(follower) follow B(following)
      */
-    @PostMapping("/save/{followerId}/{followingId}")
+    @PostMapping("/{followerId}/{followingId}")
     public BaseResponse<Follow> createFollow(@PathVariable Long followerId, @PathVariable Long followingId){
         return new BaseResponse<>(followService.createFollow(followerId,followingId));
     }
 
-    @GetMapping("/get/following_list/{userId}")
+    @GetMapping("/following_list/{userId}")
     public BaseResponse<List<FollowId>> getFollowings(@PathVariable Long userId){
         return new BaseResponse<>(followService.findFollowingList(userId));
     }
-    @GetMapping("/get/follower_list/{userId}")
+    @GetMapping("/follower_list/{userId}")
     public BaseResponse<List<FollowId>> getFollowers(@PathVariable Long userId){
         return new BaseResponse<>(followService.findFollowerList(userId));
+    }
+    @DeleteMapping("/{followerId}/{followingId}")
+    public BaseResponse<FollowId> deleteFollow(@PathVariable Long followerId, @PathVariable Long followingId){
+        return new BaseResponse<>(followService.deleteFollow(followerId,followingId));
+
     }
 
 

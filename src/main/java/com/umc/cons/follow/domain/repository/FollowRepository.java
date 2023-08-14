@@ -32,7 +32,8 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
     /**
      * 팔로우 삭제
      */
-    void deleteByFollowId(FollowId followId);
+    void deleteFollowByFollowId(FollowId followId);
 
+    Follow findFollowByFollowIdFollowerIdAndFollowIdFollowingId(Long followerId,Long followingId);
 
 }

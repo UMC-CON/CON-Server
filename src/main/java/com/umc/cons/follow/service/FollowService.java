@@ -1,12 +1,10 @@
 package com.umc.cons.follow.service;
 
-import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.follow.domain.entity.Follow;
 import com.umc.cons.follow.domain.entity.FollowId;
 import com.umc.cons.follow.domain.repository.FollowRepository;
-import com.umc.cons.follow.exception.AlreadyExistFollowException;
+import com.umc.cons.follow.exception.FollowException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,10 @@ public class FollowService {
     //중복 follow 요청 처리
     public void validateDuplicateFollow(Follow follow){
         if(followRepository.findFollowByFollowId(follow.getFollowId())!= null){
-            throw new AlreadyExistFollowException("이미 팔로우 하고 있습니다.");
+            throw new FollowException("이미 팔로우 하고 있습니다.");
+        }
+        if(follow.getFollowId().getFollowerId().equals(follow.getFollowId().getFollowingId())){
+            throw new FollowException("자기 자신을 팔로우 할 수 없습니다.");
         }
     }
     //특정 Follow 조회
@@ -41,9 +42,14 @@ public class FollowService {
 
     //Follow 목록 삭제
     public void deleteOne(FollowId followId){
-        followRepository.deleteByFollowId(followId);
+        validateDeleteFollow(followId);
+        followRepository.deleteFollowByFollowId(followId);
     }
-
+    public void validateDeleteFollow(FollowId followId){
+        if(followRepository.findFollowByFollowId(followId)== null){
+            throw new FollowException("현재 팔로우 하고 있는 않은 관계를 삭제 하려고 하였습니다.");
+        }
+    }
     /**
      *
      * Follow 생성 및 데이터베이스에 저장
@@ -81,5 +87,13 @@ public class FollowService {
             result.add(following.getFollowId());
         }
         return result;
+    }
+    @Transactional
+    public FollowId deleteFollow(Long followerId, Long followingId){
+        FollowId followId = new FollowId();
+        followId.setFollowerId(followerId);
+        followId.setFollowingId(followingId);
+        this.deleteOne(followId);
+        return followId;
     }
 }
