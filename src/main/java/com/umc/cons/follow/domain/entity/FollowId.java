@@ -1,6 +1,6 @@
 package com.umc.cons.follow.domain.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 @Embeddable
 @Data
+@NoArgsConstructor
 public class FollowId implements Serializable {
     @Column(name = "follower_id")
     private Long followerID;
