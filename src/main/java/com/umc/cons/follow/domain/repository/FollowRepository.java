@@ -17,16 +17,17 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
     /**
      * 특정 회원을 팔로우하는 팔로우 목록 조회
      */
-    List<Follow> findFollowsByFollowIdFollowerID(Long followerId);
+    List<Follow> findFollowsByFollowIdFollowerId(Long followerId);
 
     /**
      * 특정 회원이 팔로잉하는 팔로우 목록 조회
      */
-    List<Follow> findFollowsByFollowIdFollowingID(Long followingId);
+    List<Follow> findFollowsByFollowIdFollowingId(Long followingId);
+
     /**
      * 특정 회원이 팔로잉하는 팔로우 목록 조회
      */
-    Follow findFollowByFollowID(FollowId followId);
+    Follow findFollowByFollowId(FollowId followId);
 
     /**
      * 팔로우 삭제

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class FollowId implements Serializable {
     @Column(name = "follower_id")
-    private Long followerID;
+    private Long followerId;
     @Column(name = "following_id")
-    private Long followingID;
+    private Long followingId;
 }
