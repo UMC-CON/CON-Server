@@ -39,7 +39,7 @@ public class EmailService {
 
 	private void sendEmailToUser(Notification notification) {
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-		String title = notification.getTitle();
+		String title = notification.getContent().getName();
 
 		simpleMailMessage.setTo(notification.getEmail());
 		simpleMailMessage.setSubject(title + "보러가기");

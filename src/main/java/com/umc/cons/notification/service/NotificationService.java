@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 import com.umc.cons.notification.domain.repository.NotificationRepository;
@@ -45,11 +46,11 @@ public class NotificationService {
 	}
 
 	@Transactional
-	public Notification updateNotification(NotificationRequestDto requestDto) {
+	public Notification updateNotification(NotificationRequestDto requestDto, Content content) {
 		Notification notification = notificationRepository.findByUuid(requestDto.getUuid())
 			.orElseThrow(NotificationNotFoundException::new);
 
-		notification.updateNotification(requestDto);
+		notification.updateNotification(requestDto, content);
 		notificationRepository.save(notification);
 
 		return notification;

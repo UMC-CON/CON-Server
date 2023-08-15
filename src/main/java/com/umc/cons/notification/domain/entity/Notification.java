@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.umc.cons.common.util.BaseTimeEntity;
+import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.dto.NotificationRequestDto;
 
@@ -31,9 +32,11 @@ public class Notification extends BaseTimeEntity {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	private String email;
+	@ManyToOne
+	@JoinColumn(name = "content")
+	private Content content;
 
-	private String title;
+	private String email;
 
 	private LocalDateTime time;
 
@@ -43,10 +46,10 @@ public class Notification extends BaseTimeEntity {
 	private String uuid;
 
 	@Builder
-	public Notification(Member member, String email, String title, LocalDateTime time, String uuid) {
+	public Notification(Member member, String email, Content content, LocalDateTime time, String uuid) {
 		this.member = member;
 		this.email = email;
-		this.title = title;
+		this.content = content;
 		this.time = time;
 		this.uuid = uuid;
 		this.isDeleted = false;
@@ -56,9 +59,9 @@ public class Notification extends BaseTimeEntity {
 		this.isDeleted = true;
 	}
 
-	public void updateNotification(NotificationRequestDto requestDto) {
+	public void updateNotification(NotificationRequestDto requestDto, Content content) {
 		this.email = requestDto.getEmail();
-		this.title = requestDto.getTitle();
+		this.content = content;
 		this.time = requestDto.getTime();
 	}
 }
