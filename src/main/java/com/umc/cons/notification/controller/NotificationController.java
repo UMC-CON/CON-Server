@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.umc.cons.common.annotation.LoginMember;
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
+import com.umc.cons.content.domain.entity.Content;
+import com.umc.cons.content.service.ContentService;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 import com.umc.cons.notification.dto.NotificationDto;
@@ -29,12 +31,14 @@ import lombok.RequiredArgsConstructor;
 public class NotificationController {
 
 	private final NotificationService notificationService;
+	private final ContentService contentService;
 
 	@PostMapping()
 	public BaseResponse<BaseResponseStatus> registerNotification(@RequestBody NotificationDto notificationDto,
 		@LoginMember Member member) {
 
-		Notification notification = NotificationDto.toEntity(notificationDto, member);
+		Content content = contentService.findOne(notificationDto.getContentId());
+		Notification notification = NotificationDto.toEntity(notificationDto, member, content);
 		notificationService.registerNotification(notification);
 
 		return new BaseResponse(BaseResponseStatus.SUCCESS);
@@ -56,7 +60,9 @@ public class NotificationController {
 
 	@PutMapping
 	public BaseResponse<NotificationResponseDto> updateNotification(@RequestBody NotificationRequestDto requestDto) {
-		Notification notification = notificationService.updateNotification(requestDto);
+		Content content = contentService.findOne(requestDto.getContentId());
+
+		Notification notification = notificationService.updateNotification(requestDto, content);
 		NotificationResponseDto responseDto = NotificationResponseDto.of(notification);
 
 		return new BaseResponse<>(responseDto);

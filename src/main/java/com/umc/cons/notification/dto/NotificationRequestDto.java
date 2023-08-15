@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class NotificationRequestDto {
 
 	private String uuid;
-	private String title;
+	private Long contentId;
 	private String email;
 	private LocalDateTime time;
 
