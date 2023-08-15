@@ -63,15 +63,15 @@ public class RecommendTest {
         for (int i = 0; i < posts.length - user1PostTot; i++) {
             //posts[i] = new Post(members[i % userTot].getId(), contents[i % contentTot].getId());
             posts[i] = new Post();
-            posts[i].setMemberId(members[i % userTot].getId());
-            posts[i].setContentId(contents[i % contentTot].getId());
+            //posts[i].setMemberId(members[i % userTot].getId());
+            //posts[i].setContentId(contents[i % contentTot].getId());
             postRepository.save(posts[i]);
         }
         //유저1이 작성한 포스트 저장
         for (int i = 0; i < user1PostTot; i++) {
             Post post = new Post();
-            post.setMemberId(members[0].getId());
-            post.setContentId(contents[i].getId());
+            //post.setMemberId(members[0].getId());
+            //post.setContentId(contents[i].getId());
             posts[postTot - user1PostTot + i] = post;
             postRepository.save(posts[postTot - user1PostTot + i]);
         }

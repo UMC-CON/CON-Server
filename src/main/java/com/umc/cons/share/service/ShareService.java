@@ -99,8 +99,8 @@ public class ShareService {
         List<Post> postsList = shareRepository.findSharedPost();
         Map<Integer, BitSet> usersByContents = new HashMap<>();
         for(Post post: postsList){
-            int memberId = Math.toIntExact(post.getMemberId());
-            int contentId = Math.toIntExact(post.getContentId());
+            int memberId = Math.toIntExact(post.getMember().getId());
+            int contentId = Math.toIntExact(post.getContents().getId());
             if(!usersByContents.containsKey(memberId)){
                 usersByContents.put(memberId, new BitSet(maxContentId));
             }
@@ -120,8 +120,8 @@ public class ShareService {
         //콘텐츠 X 유저 맵 만들기
         Map<Integer, BitSet> contentsByUsers = new HashMap<>();
         for(Post post:postsList){
-            int memberId = Math.toIntExact(post.getMemberId());
-            int contentId = Math.toIntExact(post.getContentId());
+            int memberId = Math.toIntExact(post.getMember().getId());
+            int contentId = Math.toIntExact(post.getContents().getId());
             if(!contentsByUsers.containsKey(contentId)) {
                 contentsByUsers.put(contentId, new BitSet(maxUserId));
             }
@@ -156,8 +156,8 @@ public class ShareService {
         ArrayList<ScoredShare> scoredShares = new ArrayList<>();
         for(Share share : shares){
             Post post = postRepository.findById(share.getPostId()).get();
-            if(post.getMemberId()==userId) continue;
-            ScoredShare scoredShare = new ScoredShare(share, (scoreByUserMap.get(post.getMemberId().intValue())+scoreByContentMap.get(post.getContentId().intValue()))/2);
+            if(post.getMember().getId()==userId) continue;
+            ScoredShare scoredShare = new ScoredShare(share, (scoreByUserMap.get(post.getMember().getId().intValue())+scoreByContentMap.get(post.getContents().getId().intValue()))/2);
             scoredShares.add(scoredShare);
         }
 
