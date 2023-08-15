@@ -15,12 +15,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     public boolean existsByName(String name);
 
+    @Query(value = "SELECT m FROM Member m WHERE m.isDeleted = false AND m.email = :email")
     public Optional<Member> findByEmail(String email);
 
     public Optional<Member> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
 
-    @Query(value = "SELECT m FROM Member m WHERE LOWER(m.name) LIKE LOWER(CONCAT(:name, '%'))",
-            countQuery = "SELECT COUNT(*) FROM Member m WHERE LOWER(m.name) LIKE LOWER(CONCAT(:name, '%'))")
+    @Query(value = "SELECT m FROM Member m WHERE LOWER(m.name) LIKE LOWER(CONCAT(:name, '%')) AND m.isDeleted = false",
+            countQuery = "SELECT COUNT(*) FROM Member m WHERE LOWER(m.name) LIKE LOWER(CONCAT(:name, '%')) AND m.isDeleted = false")
     public Page<Member> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query("select max(m.id) from Member m")
