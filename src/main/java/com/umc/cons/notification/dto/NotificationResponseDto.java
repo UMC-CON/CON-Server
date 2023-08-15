@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NotificationResponseDto {
 
-	private String title;
+	private String contentName;
 
 	private String email;
 
@@ -26,7 +26,7 @@ public class NotificationResponseDto {
 
 	public static NotificationResponseDto of(Notification notification) {
 		return NotificationResponseDto.builder()
-			.title(notification.getTitle())
+			.contentName(notification.getContent().getName())
 			.email(notification.getEmail())
 			.time(notification.getTime())
 			.uuid(notification.getUuid())

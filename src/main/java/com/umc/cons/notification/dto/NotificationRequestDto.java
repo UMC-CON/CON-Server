@@ -2,6 +2,7 @@ package com.umc.cons.notification.dto;
 
 import java.time.LocalDateTime;
 
+import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.notification.domain.entity.Notification;
 
 import lombok.AccessLevel;
@@ -17,10 +18,10 @@ public class NotificationRequestDto {
 	private String email;
 	private LocalDateTime time;
 
-	public static Notification toEntity(NotificationRequestDto notificationRequestDto) {
+	public static Notification toEntity(NotificationRequestDto notificationRequestDto, Content content) {
 		return Notification.builder()
 			.uuid(notificationRequestDto.getUuid())
-			.title(notificationRequestDto.getTitle())
+			.content(content)
 			.email(notificationRequestDto.getEmail())
 			.time(notificationRequestDto.getTime())
 			.build();

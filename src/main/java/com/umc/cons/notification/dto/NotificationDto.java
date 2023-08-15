@@ -3,6 +3,7 @@ package com.umc.cons.notification.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.notification.domain.entity.Notification;
 
@@ -18,16 +19,16 @@ import lombok.NoArgsConstructor;
 @Getter
 public class NotificationDto {
 
-	private String title;
+	private Long contentId;
 
 	private LocalDateTime time;
 
 	private String email;
 
-	public static Notification toEntity(NotificationDto notificationDto, Member member) {
+	public static Notification toEntity(NotificationDto notificationDto, Member member, Content content) {
 		return Notification.builder()
 			.email(notificationDto.email)
-			.title(notificationDto.title)
+			.content(content)
 			.time(notificationDto.time)
 			.member(member)
 			.uuid(UUID.randomUUID().toString())
