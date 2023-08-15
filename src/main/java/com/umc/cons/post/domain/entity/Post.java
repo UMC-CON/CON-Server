@@ -3,6 +3,7 @@ package com.umc.cons.post.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.umc.cons.common.util.BaseTimeEntity;
 import com.umc.cons.content.domain.entity.Content;
+import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.post.dto.PostDTO;
 import com.umc.cons.share.domain.entity.Share;
 import lombok.Getter;
@@ -22,8 +23,10 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, name = "member_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id", nullable = false)
+    @JsonIgnore
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", nullable = false)
@@ -50,8 +53,8 @@ public class Post extends BaseTimeEntity {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Share share;
 
-    public void update(PostDTO postDTO, Content contents){
-        this.memberId = postDTO.getMemberId();
+    public void update(PostDTO postDTO, Content contents, Member member){
+        this.member = member;
         this.contents = contents;
         this.title = postDTO.getTitle();
         this.score = postDTO.getScore();
