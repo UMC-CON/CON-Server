@@ -24,7 +24,7 @@ public class Post extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @JsonIgnore
     private Member member;
 
