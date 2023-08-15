@@ -44,7 +44,8 @@ public class Post extends BaseTimeEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(nullable = false, name = "content", columnDefinition = "CLOB")
+    @Column(nullable = false, name = "content")
+    @Lob
     private String content;
 
     @Column(nullable = false, name = "is_deleted")
