@@ -6,9 +6,8 @@ import com.umc.cons.content.dto.ContentRequestDto;
 import com.umc.cons.content.dto.ContentResponseDto;
 import com.umc.cons.content.dto.MultipleContentRequestDto;
 import com.umc.cons.content.dto.MultipleContentResponseDto;
-import com.umc.cons.content.exception.NotExistContentException;
+import com.umc.cons.content.exception.ContentException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,7 +84,7 @@ public class ContentService {
     public ContentResponseDto getContent(Long id){
         Content content = contentRepository.findOne(id);
         if(content ==null){
-            throw new NotExistContentException("조회할 콘텐츠가 데이터베이스에 존재하지 않습니다.");
+            throw new ContentException("조회할 콘텐츠가 데이터베이스에 존재하지 않습니다.");
         }
         ContentResponseDto contentResponseDto = new ContentResponseDto();
         contentResponseDto.setId(content.getId());
@@ -102,7 +101,7 @@ public class ContentService {
     public Content updateContent(Long id, String name, String image, String genre){
         Content content = contentRepository.findOne(id);
         if (content == null){
-            throw new NotExistContentException("수정할 콘텐츠가 데이터베이스에 존재하지 않습니다.");
+            throw new ContentException("수정할 콘텐츠가 데이터베이스에 존재하지 않습니다.");
         }
         content.setName(name);
         content.setImage(image);

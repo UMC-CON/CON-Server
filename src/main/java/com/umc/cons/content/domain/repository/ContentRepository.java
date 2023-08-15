@@ -1,17 +1,11 @@
 package com.umc.cons.content.domain.repository;
 
 import com.umc.cons.content.domain.entity.Content;
-import com.umc.cons.content.exception.NotExistContentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.lang.reflect.Member;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
