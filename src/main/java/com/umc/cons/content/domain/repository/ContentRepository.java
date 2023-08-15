@@ -34,5 +34,8 @@ public class ContentRepository {
         return em.createQuery("select m from Content m where m.name = :name",Content.class).setParameter("name",name).getResultList();
     }
 
+    public Long findLastContentId(){
+        return (Long) em.createQuery("select max(c.id) from Content c").getResultList().get(0);
+    }
 
 }
