@@ -3,6 +3,7 @@ package com.umc.cons.post.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.umc.cons.content.domain.entity.Content;
+import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.domain.repository.PostRepository;
 import com.umc.cons.post.dto.PostDTO;
@@ -72,15 +73,15 @@ public class PostService {
     }
 
     @Transactional
-    public Post save(PostDTO postDTO, Content contents){
-        // memberId, contentId, title, content 값이 없으면 예외 처리
-        if (postDTO.getMemberId() == null || postDTO.getContentId() == null ||
+    public Post save(PostDTO postDTO, Content contents, Member member){
+        // contentId, title, content 값이 없으면 예외 처리
+        if (postDTO.getContentId() == null ||
                 !StringUtils.hasText(postDTO.getTitle()) || !StringUtils.hasText(postDTO.getContent())) {
             throw new IllegalArgumentException("필수 입력 사항이 누락되었습니다.");
         }
 
         Post post = new Post();
-        post.update(postDTO, contents);
+        post.update(postDTO, contents, member);
 
         Post savedPost = postRepository.save(post);
 

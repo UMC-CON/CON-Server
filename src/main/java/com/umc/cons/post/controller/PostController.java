@@ -1,9 +1,11 @@
 package com.umc.cons.post.controller;
 
+import com.umc.cons.common.annotation.LoginMember;
 import com.umc.cons.common.config.BaseResponse;
 import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.content.service.ContentService;
+import com.umc.cons.member.domain.entity.Member;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.dto.*;
 import com.umc.cons.post.service.PostService;
@@ -38,13 +40,13 @@ public class PostController {
 
     // 게시글 등록
     @PostMapping
-    public BaseResponse<BaseResponseStatus> write(@ModelAttribute PostDTO postDTO) {
+    public BaseResponse<BaseResponseStatus> write(@ModelAttribute PostDTO postDTO, @LoginMember Member member) {
         try {
             Content contents = contentService.findOne(postDTO.getContentId());
             if (contents == null) {
                 return new BaseResponse<>(REQUEST_ERROR);
             }
-            Post savedPost = postService.save(postDTO, contents);
+            Post savedPost = postService.save(postDTO, contents, member);
 
             return new BaseResponse<>(SUCCESS);
         } catch (IllegalArgumentException e) {

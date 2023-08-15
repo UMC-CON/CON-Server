@@ -14,7 +14,6 @@ import javax.validation.constraints.Max;
 @Setter
 @NoArgsConstructor
 public class PostDTO extends BaseTimeEntity {
-    private Long memberId;
     private Long contentId;
     private String title;
     private String imageUrl;
