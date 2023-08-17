@@ -61,11 +61,11 @@ public class PostService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 글입니다."));
     }
 
-    public Page<Post> getPostsByMemberId(Long memberId, Pageable pageable) {
-        if(memberId == null || memberId == 0.0){
-            throw new IllegalArgumentException("memberId가 없습니다.");
+    public Page<Post> getPostsByMember(Member member, Pageable pageable) {
+        if (member == null) {
+            throw new IllegalArgumentException("Member가 없습니다.");
         }
-        return postRepository.findByMemberId(memberId, pageable);
+        return postRepository.findByMember(member, pageable);
     }
 
     public Page<Post> findAll(Pageable pageable) {
@@ -158,8 +158,8 @@ public class PostService {
         return post;
     }
 
-    public Page<Post> getPostsByMemberIdAndNotDeleted(Long memberId, Pageable pageable) {
-        Page<Post> posts = getPostsByMemberId(memberId, pageable);
+    public Page<Post> getPostsByMemberAndNotDeleted(Member member, Pageable pageable) {
+        Page<Post> posts = getPostsByMember(member, pageable);
         List<Post> notDeletedPosts = new ArrayList<>();
         for (Post post : posts.getContent()) {
             if (!post.isDeleted()) {

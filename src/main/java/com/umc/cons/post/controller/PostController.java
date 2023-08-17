@@ -6,6 +6,7 @@ import com.umc.cons.common.config.BaseResponseStatus;
 import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.content.service.ContentService;
 import com.umc.cons.member.domain.entity.Member;
+import com.umc.cons.member.service.MemberService;
 import com.umc.cons.post.domain.entity.Post;
 import com.umc.cons.post.dto.*;
 import com.umc.cons.post.service.PostService;
@@ -23,6 +24,7 @@ import static com.umc.cons.common.config.BaseResponseStatus.*;
 public class PostController {
     private final PostService postService;
     private final ContentService contentService;
+    private final MemberService memberService;
 
     // 이미지 파일 업로드
     @PostMapping("/upload")
@@ -82,7 +84,9 @@ public class PostController {
     public BaseResponse<Page<PostResponseDTO>> getPostsByMemberId(@PathVariable Long memberId, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("createdAt").descending());
         try{
-            Page<Post> posts = postService.getPostsByMemberIdAndNotDeleted(memberId, pageable);
+            Member member = memberService.findById(memberId);
+
+            Page<Post> posts = postService.getPostsByMemberAndNotDeleted(member, pageable);
             Page<PostResponseDTO> responsePage = posts.map(PostResponseDTO::convertToResponseDTO);
 
             return new BaseResponse<>(responsePage);
