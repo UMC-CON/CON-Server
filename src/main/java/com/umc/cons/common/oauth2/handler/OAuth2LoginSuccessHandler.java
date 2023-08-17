@@ -31,7 +31,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
                 jwtService.sendAccessToken(response, accessToken);
 
-                response.sendRedirect("/");
+                response.sendRedirect("/members/oauth2/sign-up");
 
             } else if (oAuth2User.getRole() == Role.USER) {
                 loginSuccess(response, oAuth2User);
