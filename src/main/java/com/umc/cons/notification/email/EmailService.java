@@ -23,34 +23,33 @@ public class EmailService {
 	private final JavaMailSender javaMailSender;
 	private final NotificationService notificationService;
 
-	@Scheduled(cron = "0 * * * * *")
-	@Async
-	public void sendMail() {
-		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-
-		log.info(now.toString());
-
-		List<Notification> notifications = notificationService.findNotificationsByTime(now);
-
-		for (Notification notification : notifications) {
-			sendEmailToUser(notification);
-		}
-	}
-
-	private void sendEmailToUser(Notification notification) {
-		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-		String title = notification.getContent().getName();
-
-		simpleMailMessage.setTo(notification.getEmail());
-		simpleMailMessage.setSubject(title + "보러가기");
-		simpleMailMessage.setText(title + "보러갈 시간");
-
-		try {
-			javaMailSender.send(simpleMailMessage);
-			log.info("Email sent to: " + notification.getEmail());
-		} catch (Exception e) {
-			log.error("Failed to send email to: " + notification.getEmail(), e);
-		}
-	}
+	// @Scheduled(cron = "0 * * * * *")
+	// @Async
+	// public void sendMail() {
+	// 	LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+	//
+	// 	log.info(now.toString());
+	//
+	// 	List<Notification> notifications = notificationService.findNotificationsByTime(now);
+	//
+	// 	for (Notification notification : notifications) {
+	// 		sendEmailToUser(notification);
+	// 	}
+	// }
+	//
+	// private void sendEmailToUser(Notification notification) {
+	// 	SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+	// 	String title = notification.getContent().getName();
+	//
+	// 	simpleMailMessage.setTo(notification.getEmail());
+	// 	simpleMailMessage.setSubject(title + "보러가기");
+	// 	simpleMailMessage.setText(title + "보러갈 시간");
+	//
+	// 	try {
+	// 		javaMailSender.send(simpleMailMessage);
+	// 		log.info("Email sent to: " + notification.getEmail());
+	// 	} catch (Exception e) {
+	// 		log.error("Failed to send email to: " + notification.getEmail(), e);
+	// 	}
+	// }
 }
-
