@@ -77,8 +77,13 @@ public class Member extends BaseTimeEntity {
 		this.isDeleted = true;
 	}
 
+	public void updateProfile(ProfileRequestDto requestDto, String imageUrl) {
+		this.imageUrl = imageUrl;
+		this.name = requestDto.getName();
+		this.introduction = requestDto.getIntroduction();
+	}
+
 	public void updateProfile(ProfileRequestDto requestDto) {
-		this.imageUrl = requestDto.getImageUrl();
 		this.name = requestDto.getName();
 		this.introduction = requestDto.getIntroduction();
 	}
