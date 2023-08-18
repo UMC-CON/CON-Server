@@ -1,6 +1,12 @@
 package com.umc.cons.member.domain.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import com.umc.cons.common.util.BaseTimeEntity;
 import com.umc.cons.member.dto.ProfileRequestDto;
@@ -9,9 +15,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -47,11 +50,6 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "social_id")
 	private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
 
-	@OneToMany(mappedBy = "follow")
-	private List<Member> followings = new ArrayList<>();
-
-	@OneToMany(mappedBy = "follow")
-	private List<Member> followers = new ArrayList<>();
 	@Builder
 	public Member(String email, String password, String imageUrl, String name,
 		SocialType socialType, String socialId, Role role) {
@@ -90,12 +88,4 @@ public class Member extends BaseTimeEntity {
 		this.introduction = requestDto.getIntroduction();
 	}
 
-	public void follow(Member member){
-		followings.add(member);
-		member.getFollowers().add(this);
-	}
-	public void unfollow(Member member){
-		followings.remove(member);
-		member.getFollowers().remove(this);
-	}
 }
