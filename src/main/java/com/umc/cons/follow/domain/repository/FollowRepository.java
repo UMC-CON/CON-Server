@@ -3,6 +3,7 @@ package com.umc.cons.follow.domain.repository;
 import com.umc.cons.content.domain.entity.Content;
 import com.umc.cons.follow.domain.entity.Follow;
 import com.umc.cons.follow.domain.entity.FollowId;
+import com.umc.cons.member.domain.entity.Member;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,12 +18,12 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
     /**
      * 특정 회원을 팔로우하는 팔로우 목록 조회
      */
-    List<Follow> findFollowsByFollowIdFollowerId(Long followerId);
+    List<Follow> findFollowsByFollowIdFollower(Member follower);
 
     /**
      * 특정 회원이 팔로잉하는 팔로우 목록 조회
      */
-    List<Follow> findFollowsByFollowIdFollowingId(Long followingId);
+    List<Follow> findFollowsByFollowIdFollowing(Member following);
 
     /**
      * 특정 회원이 팔로잉하는 팔로우 목록 조회
