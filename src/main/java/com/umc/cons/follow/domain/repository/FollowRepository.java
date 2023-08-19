@@ -16,16 +16,6 @@ import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowId> {
     /**
-     * 특정 회원을 팔로우하는 팔로우 목록 조회
-     */
-    List<Follow> findFollowsByFollowIdFollower(Member follower);
-
-    /**
-     * 특정 회원이 팔로잉하는 팔로우 목록 조회
-     */
-    List<Follow> findFollowsByFollowIdFollowing(Member following);
-
-    /**
      * 특정 회원이 팔로잉하는 팔로우 목록 조회
      */
     Follow findFollowByFollowId(FollowId followId);
@@ -34,7 +24,5 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
      * 팔로우 삭제
      */
     void deleteFollowByFollowId(FollowId followId);
-
-    Follow findFollowByFollowIdFollowerIdAndFollowIdFollowingId(Long followerId,Long followingId);
 
 }
