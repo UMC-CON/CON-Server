@@ -1,14 +1,14 @@
 package com.umc.cons.follow.service;
 
+import com.umc.cons.common.annotation.LoginMember;
 import com.umc.cons.follow.domain.entity.Follow;
 import com.umc.cons.follow.domain.entity.FollowId;
 import com.umc.cons.follow.domain.repository.FollowRepository;
 import com.umc.cons.follow.exception.FollowException;
+import com.umc.cons.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowService {
     private final FollowRepository followRepository;
-
     //Following 저장 로직
     @Transactional
     public FollowId join(Follow follow){
@@ -31,7 +30,7 @@ public class FollowService {
         if(followRepository.findFollowByFollowId(follow.getFollowId())!= null){
             throw new FollowException("이미 팔로우 하고 있습니다.");
         }
-        if(follow.getFollowId().getFollowerId().equals(follow.getFollowId().getFollowingId())){
+        if(follow.getFollowId().getFollower().equals(follow.getFollowId().getFollowing())){
             throw new FollowException("자기 자신을 팔로우 할 수 없습니다.");
         }
     }
@@ -39,7 +38,6 @@ public class FollowService {
     public Follow findOne(FollowId followId) {
         return followRepository.findFollowByFollowId(followId);
     }
-
     //Follow 목록 삭제
     public void deleteOne(FollowId followId){
         validateDeleteFollow(followId);
@@ -55,45 +53,36 @@ public class FollowService {
      * Follow 생성 및 데이터베이스에 저장
      */
     @Transactional
-    public Follow createFollow(Long followerId, Long followingId){
+    public Follow createFollow(Member follower, Member following){
         FollowId followId = new FollowId();
-        followId.setFollowerId(followerId);
-        followId.setFollowingId(followingId);
+        followId.setFollower(follower);
+        followId.setFollowing(following);
         Follow follow = new Follow();
         follow.setFollowId(followId);
         this.join(follow);
+        follower.follow(following);
         return follow;
     }
 
     /**
      * 특정 회원이 팔로우한 목록
      */
-    public List<FollowId> findFollowerList(Long userId){
-        List<Follow> followers = followRepository.findFollowsByFollowIdFollowingId(userId);
-        List<FollowId> result = new ArrayList<>();
-        for(Follow follower : followers){
-            result.add(follower.getFollowId());
-        }
-        return result;
-
+    public List<Member> findFollowerList(@LoginMember Member member){
+        return member.getFollowers();
     }
     /**
      * 특정 회원을 팔로우하는 목록
      */
-    public List<FollowId> findFollowingList(Long userId){
-        List<Follow> followings = followRepository.findFollowsByFollowIdFollowerId(userId);
-        List<FollowId> result = new ArrayList<>();
-        for(Follow following : followings){
-            result.add(following.getFollowId());
-        }
-        return result;
+    public List<Member> findFollowingList(@LoginMember Member member){
+        return member.getFollowings();
     }
     @Transactional
-    public FollowId deleteFollow(Long followerId, Long followingId){
+    public FollowId deleteFollow(Member follower, Member following){
         FollowId followId = new FollowId();
-        followId.setFollowerId(followerId);
-        followId.setFollowingId(followingId);
+        followId.setFollower(follower);
+        followId.setFollowing(following);
         this.deleteOne(followId);
+        follower.unfollow(following);
         return followId;
     }
 }
