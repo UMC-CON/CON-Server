@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.awt.*;
 import java.io.Serializable;
 
-@Entity @Table(name = "follower")
+@Entity @Table(name = "follow")
 @Data
 @Embeddable
 public class Follow implements Serializable {

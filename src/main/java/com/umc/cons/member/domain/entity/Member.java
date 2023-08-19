@@ -47,10 +47,10 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "social_id")
 	private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
 
-	@OneToMany(mappedBy = "follow")
+	@OneToMany(mappedBy = "followId.following")
 	private List<Member> followings = new ArrayList<>();
 
-	@OneToMany(mappedBy = "follow")
+	@OneToMany(mappedBy = "followId.follower")
 	private List<Member> followers = new ArrayList<>();
 	@Builder
 	public Member(String email, String password, String imageUrl, String name,
