@@ -6,6 +6,7 @@ import com.umc.cons.follow.domain.entity.FollowId;
 import com.umc.cons.follow.domain.repository.FollowRepository;
 import com.umc.cons.follow.exception.FollowException;
 import com.umc.cons.member.domain.entity.Member;
+import com.umc.cons.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowService {
     private final FollowRepository followRepository;
+    private final MemberService memberService;
     //Following 저장 로직
     @Transactional
     public FollowId join(Follow follow){
@@ -53,7 +55,8 @@ public class FollowService {
      * Follow 생성 및 데이터베이스에 저장
      */
     @Transactional
-    public Follow createFollow(Member follower, Member following){
+    public Follow createFollow(Member follower, Long followingId){
+        Member following = memberService.findById(followingId);
         FollowId followId = new FollowId();
         followId.setFollower(follower);
         followId.setFollowing(following);
@@ -77,7 +80,8 @@ public class FollowService {
         return member.getFollowings();
     }
     @Transactional
-    public FollowId deleteFollow(Member follower, Member following){
+    public FollowId deleteFollow(Member follower, Long followingId){
+        Member following = memberService.findById(followingId);
         FollowId followId = new FollowId();
         followId.setFollower(follower);
         followId.setFollowing(following);

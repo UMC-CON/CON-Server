@@ -21,9 +21,9 @@ public class FollowController {
      *  follow 저장 로직
      *  A(follower) follow B(following)
      */
-    @PostMapping("")
-    public BaseResponse<Follow> createFollow(@LoginMember Member loginmember, @RequestBody Member following){
-        return new BaseResponse<>(followService.createFollow(loginmember,following));
+    @PostMapping("/{id}")
+    public BaseResponse<Follow> createFollow(@LoginMember Member loginmember, @PathVariable Long id){
+        return new BaseResponse<>(followService.createFollow(loginmember,id));
     }
 
     @GetMapping("/following_list")
@@ -34,9 +34,9 @@ public class FollowController {
     public BaseResponse<List<Member>> getFollowers(@LoginMember Member loginmember){
         return new BaseResponse<>(followService.findFollowerList(loginmember));
     }
-    @DeleteMapping("")
-    public BaseResponse<FollowId> deleteFollow(@LoginMember Member loginmember, @RequestBody Member following) {
-        return new BaseResponse<>(followService.deleteFollow(loginmember, following));
+    @DeleteMapping("/{id}")
+    public BaseResponse<FollowId> deleteFollow(@LoginMember Member loginmember, @PathVariable Long id) {
+        return new BaseResponse<>(followService.deleteFollow(loginmember, id));
 
     }
 }
