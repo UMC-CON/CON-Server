@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 @Entity @Table(name = "follow")
 @Data
-@Embeddable
 public class Follow implements Serializable {
     @EmbeddedId
     private FollowId followId;

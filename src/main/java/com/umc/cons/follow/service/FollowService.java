@@ -63,7 +63,7 @@ public class FollowService {
         Follow follow = new Follow();
         follow.setFollowId(followId);
         this.join(follow);
-        follower.follow(following);
+//        follower.follow(following);
         return follow;
     }
 
@@ -71,13 +71,13 @@ public class FollowService {
      * 특정 회원이 팔로우한 목록
      */
     public List<Member> findFollowerList(@LoginMember Member member){
-        return member.getFollowers();
+        return followRepository.findFollowingsOfLoginMember(member);
     }
     /**
      * 특정 회원을 팔로우하는 목록
      */
     public List<Member> findFollowingList(@LoginMember Member member){
-        return member.getFollowings();
+        return followRepository.findFollowersOfLoginMember(member);
     }
     @Transactional
     public FollowId deleteFollow(Member follower, Long followingId){
@@ -86,7 +86,7 @@ public class FollowService {
         followId.setFollower(follower);
         followId.setFollowing(following);
         this.deleteOne(followId);
-        follower.unfollow(following);
+//        follower.unfollow(following);
         return followId;
     }
 }
