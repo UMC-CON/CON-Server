@@ -47,11 +47,11 @@ public class Member extends BaseTimeEntity {
 	@Column(name = "social_id")
 	private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인시 null)
 
-	@OneToMany(mappedBy = "followId.following")
-	private List<Member> followings = new ArrayList<>();
-
-	@OneToMany(mappedBy = "followId.follower")
-	private List<Member> followers = new ArrayList<>();
+//	@OneToMany(mappedBy = "followId.following")
+//	private List<Member> followings = new ArrayList<>();
+//
+//	@OneToMany(mappedBy = "followId.follower")
+//	private List<Member> followers = new ArrayList<>();
 	@Builder
 	public Member(String email, String password, String imageUrl, String name,
 		SocialType socialType, String socialId, Role role) {
@@ -89,13 +89,13 @@ public class Member extends BaseTimeEntity {
 		this.name = requestDto.getName();
 		this.introduction = requestDto.getIntroduction();
 	}
-	public void follow(Member member){
-		followings.add(member);
-		member.getFollowers().add(this);
-	}
-	public void unfollow(Member member){
-		followings.remove(member);
-		member.getFollowers().remove(this);
-	}
+//	public void follow(Member member){
+//		followings.add(member);
+//		member.getFollowers().add(this);
+//	}
+//	public void unfollow(Member member){
+//		followings.remove(member);
+//		member.getFollowers().remove(this);
+//	}
 
 }
