@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponse {
+	private Long id;
 	private String name;
 	private String imageUrl;
 	private String introduction;
 
 	public static MemberResponse of(Member member) {
 		return MemberResponse.builder()
+			.id(member.getId())
 			.name(member.getName())
 			.imageUrl(member.getImageUrl())
 			.introduction(member.getIntroduction())
